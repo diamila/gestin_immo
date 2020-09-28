@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--Create PDF Report-->
+    <!--  https://www.youtube.com/watch?v=SkKAXURqNfQ&list=PLqRRLx0cl0hoJhjFWkFYowveq2Zn55dhM&index=24  -->
+    <!--  https://www.youtube.com/watch?v=qAv5GAmIryI&list=PLqRRLx0cl0hoJhjFWkFYowveq2Zn55dhM&index=25   -->
+    <template id="report_facture_location">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <br></br>
+                        <br></br>
+                        <br></br>
+                        <br></br>
+                        <div class="oe_structure"/>
+                        <div class="row">
+                            <div class="col-xs-2" style="margin:auto;">
+                            </div>
+                            <center>
+                                <div>
+
+                                    <h3 style="text-align:right;">locataire :<p style="text-align:right;" t-field="o.locataire_id"></p>
+                                    <p style="text-align:right;" t-field="o.mobile"></p>
+                                    </h3>
+                                         <br/>
+                                         <br/>
+
+                                         <h5>Facture DE LOCATION D'UN(E) <strong t-field="o.categ_id"></strong></h5>
+                                         <br/>
+                                         
+                                         
+                                           <div id="informations_location" class="row mt32 mb32">
+                                            <div class="col-auto mw-100 mb-2" t-if="o.date_paiement" name="date_paiement">
+                                                <strong>date_paiement:</strong>
+                                                <p class="m-0" t-field="o.date_paiement"/>
+                                            </div>
+                                            
+                                            
+                                            <div class="col-auto mw-100 mb-2" t-if="o.objet_paiement" name="objet_paiement">
+                                                <strong>objet_paiement:</strong>
+                                                <p class="m-0" t-field="o.objet_paiement"/>
+                                             </div>
+                                             
+                                             
+                                             <div class="col-auto mw-100 mb-2" t-if="o.paiement" name="paiement">
+                                                <strong>Durée Paiements:</strong>
+                                                <p class="m-0" t-field="o.paiement"/>
+                                             </div>
+
+                                            
+                                            <div class="col-auto mw-100 mb-2" t-if="o.mois_payee_c" name="mois_payee_c">
+                                                <strong>mois loyer:</strong>
+                                                <p class="m-0" t-field="o.mois_payee_c"/>
+                                             </div>
+                                             
+                                             <div class="col-auto mw-100 mb-2" t-if="o.mois_commencant" name="mois_commencant">
+                                                <strong>mois commençant:</strong>
+                                                <p class="m-0" t-field="o.mois_commencant"/>
+                                             </div>
+                                             
+                                             
+                                             
+                                             </div>
+                       
+                    
+    <table class="table table-sm o_main_table" style="border: 1px solid black;">
+      <tr>
+        <th style="border: 1px solid black;">Bien louer</th>
+        <th style="border: 1px solid black;">Taxes location</th>
+         <th style="border: 1px solid black;">Price location</th>
+      </tr>
+      <tr>
+        <td style="border: 1px solid black;"><span t-field="o.product_id"/></td>
+        <td style="border: 1px solid black;"><span t-field="o.montant_paye"/></td>
+      </tr>
+    </table>
+    
+    
+       <p style="text-align:right;"> Prix (sans taxe):    <span t-field="o.montant_paye"></span></p>
+      <p style="text-align:right;">_____________________</p>
+     <p style="text-align:right;"> Prix Total (sans taxe):  <span t-field="o.price_unit"></span></p>
+                        
+                        
+                                
+                                
+                                
+                                
+                                
+                                </div>
+
+                            </center>
+                            <!--adding the barcode to the report-->
+                            <!--  https://www.youtube.com/watch?v=bwT_ZtKWn9E&list=PLqRRLx0cl0hoJhjFWkFYowveq2Zn55dhM&index=51  -->
+                            <!--<table class="table table-bordered mb-0" style="border: 2px solid black;">-->
+                                <!--<tr>-->
+                                    <!--<td class="text-center align-middle" style="height: 6rem">-->
+                                        <!--<img alt="Barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', o.name_seq, 600, 150)" style="width:100%;height::4rem;"/>-->
+                                        <!--<span t-field="o.name_seq"/>-->
+                                    <!--</td>-->
+                                <!--</tr>-->
+                            <!--</table>-->
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>
+                 
+                                         
+                                         
+                                         
+                                         

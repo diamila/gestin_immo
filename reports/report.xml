@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <report
+        id="contrat_card"
+        string="Contrat location"
+        model="lb.location"
+        report_type="qweb-pdf"
+        name="location_biens.report_contrat"
+        file="location_biens.report_contrat"/>
+
+
+     <report
+        id="contrat_card_close"
+        string="Contrat close"
+        model="lb.location"
+        report_type="qweb-pdf"
+        name="location_biens.report_close"
+        file="location_biens.report_close"/>
+
+
+    <report
+        id="contrat_bailleur"
+        string="Contrat bailleur"
+        model="product.template"
+        report_type="qweb-pdf"
+        name="location_biens.report_contrat_bailleur"
+        file="location_biens.report_contrat_bailleur"/>
+
+
+    <report
+        id="contrat_card_vente"
+        string="Contrat Vente"
+        model="lb.contrat_vente"
+        report_type="qweb-pdf"
+        name="location_biens.report_contrat_vente"
+        file="location_biens.report_contrat_vente"/>
+        
+        
+     <report
+        id="facture_card_location"
+        string="facture location"
+        model="lb.paiement_location"
+        report_type="qweb-pdf"
+        name="location_biens.report_facture_location"
+        file="location_biens.report_facture_location"/>
+        
+
+
+</odoo>

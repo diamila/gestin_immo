@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+
+         <!-- ResPartner customization -->
+
+    <record id="locataire_custom_fields_potenciel" model="ir.ui.view">
+      <field name="name">locataire.form.inherited</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_partner_form"/>
+      <field name="arch" type="xml">
+          
+          
+           <xpath expr="//page[@name='sales_purchases']//field[@name='property_supplier_payment_term_id']" position="before">
+             <field name="statut_agent" string="statut Agent"  attrs="{'invisible': [('agent', '=', False)]}"/>
+            </xpath>
+
+
+
+
+
+          <button name="%(crm.crm_lead_opportunities)d" position="before">
+           <button name="open_locataire_contrat" class="oe_stat_button" type="object" attrs="{'invisible':['|', ('client_type','!=','client_loc'), ('active_potenctiel','!=','client')]}"
+           icon="fa-file-text-o" context="{'default_locataires': active_id}">
+                            <field string="Contrats location" name="contrat_count" widget="statinfo"/>
+                        </button>
+                        
+                          
+          </button>
+          
+           <button name="open_locataire_contrat" position="after">
+                <button name="open_facture" class="oe_stat_button" type="object" icon="fa-paste" attrs="{'invisible':['|', ('client_type','!=','client_loc'), ('active_potenctiel','!=','client')]}">
+                            <field string="pré-facturation" name="facture_count" widget="statinfo" />
+                </button>  
+             </button>              
+          
+          
+          
+          <button name="toggle_active" position="after">
+           <button name="open_locataire_contrat_vente" class="oe_stat_button" type="object" attrs="{'invisible':['|', ('client_type','!=','client_ache'), ('active_potenctiel','!=','client')]}"
+           icon="fa-file-text-o" context="{'default_locataires': active_id}">
+                            <field string="Contrats vente" name="contrat_count_vente" widget="statinfo"/>
+                        </button>
+          </button>
+          
+          
+        
+          
+          
+
+        <xpath expr="//field[@name='vat']" position="after">
+          <field name="active_potenctiel"/>
+        </xpath>
+        
+        <xpath expr="//field[@name='active_potenctiel']" position="attributes">
+               <attribute name="attrs">{'invisible':[('customer','=',False)]}</attribute>
+          </xpath>
+
+
+       <xpath expr="//field[@name='active_potenctiel']" position="after">
+          <field name="client_type" />
+        </xpath>
+
+           <xpath expr="//field[@name='client_type']" position="attributes">
+               <attribute name="attrs">{'invisible':['|', ('active_potenctiel','=','prospect') , ('customer','=',False)]}</attribute>
+          </xpath>
+
+          <xpath expr="//field[@name='client_type']" position="after">
+              <br/>
+          <field name="origine_prospect"/>
+        </xpath>
+
+
+
+
+         <xpath expr="//field[@name='origine_prospect']" position="attributes">
+               <attribute name="attrs">{'invisible':[('active_potenctiel','=','client')]}</attribute>
+          </xpath>
+
+            <xpath expr="//field[@name='origine_prospect']" position="after">
+          <field name="user_id"/>
+        </xpath>
+
+         <xpath expr="//field[@name='user_id']" position="attributes">
+               <attribute name="attrs">{'invisible':[('active_potenctiel','=','client')]}</attribute>
+          </xpath>
+
+           <xpath expr="//field[@name='user_id']" position="attributes">
+               <attribute name="attrs">{'invisible':[('origine_prospect','!=','agent_cpi')]}</attribute>
+          </xpath>
+
+          <xpath expr="//field[@name='user_id']" position="after">
+              <br/>
+          <field name="besoin" widget="radio"/>
+        </xpath>
+
+          <xpath expr="//field[@name='besoin']" position="attributes">
+               <attribute name="attrs">{'invisible':[('active_potenctiel','=','client')]}</attribute>
+          </xpath>
+
+          <xpath expr="//field[@name='besoin']" position="after">
+          <field name="type_besoin"  placeholder="ex:appartment/studio/villa" />
+        </xpath>
+
+
+          <xpath expr="//field[@name='type_besoin']" position="attributes">
+               <attribute name="attrs">{'invisible':[('active_potenctiel','=','client')]}</attribute>
+          </xpath>
+
+
+          <xpath expr="//field[@name='opportunity_count']" position="attributes">
+               <attribute name="attrs" >{'invisible':[('active_potenctiel','=','client')]}</attribute>
+          </xpath>
+
+
+          <xpath expr="//field[@name='sale_order_count']" position="attributes">
+               <attribute name="string" >Factures</attribute>
+          </xpath>
+
+          <xpath expr="//page[@name='sales_purchases']" position="attributes">
+               <attribute name="string" >Location &amp; Achat</attribute>
+          </xpath>
+
+          <xpath expr="//group[@name='sale']" position="attributes">
+               <attribute name="string" >Location</attribute>
+          </xpath>
+
+          <xpath expr="//field[@name='opportunity_count']" position="attributes">
+               <attribute name="attrs" >{'invisible':[('active_potenctiel','=','client')]}</attribute>
+          </xpath>
+
+
+           <button name="%(crm.crm_lead_opportunities)d" position="attributes">
+               <attribute name="attrs" >{'invisible':[('active_potenctiel','=','client')]}</attribute>
+           </button>
+
+
+
+            <notebook position="inside">
+             <page string="Info locataire Potenciel" attrs="{'invisible':[('active_potenctiel','=','client')]}">
+             <group>
+                  <group>
+                 <field name="quartier_souhaitee"></field>
+                 <field name="budget"></field>
+                  <field name="nbre_tour"/>
+                      <field name="ameublement"/>
+                       <field name="chambres"></field>
+                  </group>
+                 <group>
+                           <field name="cuisines"></field>
+                            <field name="salons"></field>
+                            <field name="toilette"></field>
+                           <field name="cour"/>
+                 </group>
+             </group>
+             </page>
+            </notebook>
+
+           <notebook position="inside">
+             <page string="Reclamation Client" attrs="{'invisible':['|', ('active_potenctiel','!=','client'), ('customer','=',False)]}">
+             <field name="reclamation" attrs="{'invisible':[('active_potenctiel','!=','client')]}">
+                                    <tree string="Réclamation locataire">
+                                        <field name="type_reclamation"/>
+                                        <field name="date_reclamation"/>
+                                         <field name="resume_reclamation"/>
+                                    </tree>
+                                </field>
+             </page>
+            </notebook>
+
+          <!--
+          <xpath expr="//page[@name='internal_notes']" position="after">
+             <page string="Potenciel">
+                        <field name="quartier_souhaitee" attrs="{'invisible': [(active_potenctiel','=',False)]}"/>
+                 <field name="type_id" attrs="{'invisible': [(active_potenctiel','=',True)]}"/>
+                 <field name="budget" widget="monetary" attrs="{'invisible': [(active_potenctiel','=',False)]}"/>
+
+			 </page>
+        </xpath>-->
+      </field>
+    </record>
+
+        <!-- Locataires tree view -->
+
+      <!--
+    <record id="locataire_custom_tree_fields" model="ir.ui.view">
+      <field name="name">locataire.tree.inherited</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_partner_tree"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='display_name']" position="before">
+                  <field name="quartier_souhaitee"/>
+                 <field name="type_id" attrs="{'invisible': [(active_potenctiel','=',True)]}"/>
+                 <field name="budget" widget="monetary"/>
+        </xpath>
+      </field>
+    </record>
+      -->
+      
+      
+         
+    <!--kanban/prospect heritage-->
+        <record id="res_partner_prospect_kanban_view" model="ir.ui.view">
+            <field name="name">res.partner.prospect.kanban</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="arch" type="xml">
+               <xpath expr="//div[hasclass('oe_kanban_partner_links')]" position="inside">
+                                <ul>
+                                    
+                                     <field name="active_potenctiel" invisible="1"></field>
+                                  
+                                    <button attrs="{'invisible': ['|', ('origine_prospect','!=','site_web'), ('active_potenctiel','!=','prospect')]}">origine prospect :<field name="origine_prospect"/> </button>
+                                </ul>
+                </xpath>
+                
+                
+                 <xpath expr="//field[@name='country_id']" position="attributes">
+                   <attribute name="invisible">1</attribute>
+                 </xpath>
+            </field>
+        </record>
+
+
+
+
+
+        <!-- Locataires search view -->
+           <record id="locataire_custom_search_fields" model="ir.ui.view">
+      <field name="name">locataire.search.inherited</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='customer']" position="after">
+                     <filter string="Prospect" name="Prospect" domain="[('active_potenctiel','=','prospect')]"/>
+                </xpath>
+                 <xpath expr="//filter[@name='Prospect']" position="after">
+                     <filter string="Acheteur" name="Acheteur" domain="[('client_type','=','client_ache')]"/>
+                </xpath>
+                 <xpath expr="//filter[@name='Acheteur']" position="after">
+                     <filter string="Client_Locataire" name="Client_Locataire" domain="[('client_type','=','client_loc')]"/>
+                </xpath>
+                
+                 <xpath expr="//filter[@name='Client_Locataire']" position="after">
+                     <group expand="0" name="group_client_type" string="Group By">
+                       <filter name="group_client_type" string="Catégorie" context="{'group_by': 'besoin'}"/>
+                     </group>
+                </xpath>
+            </field>
+        </record>
+
+
+
+
+
+       <!--ACTION prospects-->
+        <record model="ir.actions.act_window" id="locataire_potenciel_list_action">
+            <field name="name">Prospects</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+             <field name="domain">[('active_potenctiel','=','prospect')]</field>
+             <field name="context">{'group_by': 'besoin', 'default_active_potenctiel' : 'prospect'}</field>      
+            <field name="search_view_id" ref="locataire_custom_search_fields"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Créer un nouveau prospects
+                </p>
+            </field>
+        </record>
+
+      <!--action locataire-->
+      <record model="ir.actions.act_window" id="client_loc_acheteur_action">
+            <field name="name">Client Locataires</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+             <field name="domain">[('client_type','=','client_loc'), ('active_potenctiel','=','client'), ('customer','=',True), ('parent_id', '=', False)]</field>
+            <field name="context">{'default_client_type' : 'client_loc'}</field> 
+            <field name="search_view_id" ref="locataire_custom_search_fields"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Créer un nouveau Locataire
+                </p>
+            </field>
+        </record>
+
+      <!--action acheteur-->
+      <record model="ir.actions.act_window" id="client_locataire_ach_action">
+            <field name="name">Client acheteur</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+             <field name="domain">[('client_type','=','client_ache')]</field>
+             <field name="context">{'default_client_type' : 'client_ache'}</field> 
+            <field name="search_view_id" ref="locataire_custom_search_fields"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Créer un nouveau acheteur
+                </p>
+            </field>
+        </record>
+
+
+          <menuitem id="rental_app_menu_client_n" name="Contacts"
+                  parent="main_rental_app_menu"
+                 sequence="3" />
+                  
+
+
+
+        <menuitem id="locataire_potencie_menu" name="Prospect"
+                  parent="rental_app_menu_client_n"
+                  action="locataire_potenciel_list_action" sequence="1"/>
+
+
+       <menuitem id="client_locataire-ach_menu" name="locataires"
+                  parent="rental_app_menu_client_n"
+                  action="client_loc_acheteur_action" sequence="2"/>
+
+       <menuitem id="client_loc-acheteur_menu" name="Acheteurs"
+                parent="rental_app_menu_client_n"
+                  action="client_locataire_ach_action" sequence="3"/>
+
+
+
+      <!--crm-->
+      <menuitem id="locatairepotenciel" name="Prospect"
+                  parent="crm.crm_menu_root"
+                  action="locataire_potenciel_list_action" sequence="6"/>
+
+
+
+      <!-- Réclamation form view -->
+
+        <record model="ir.ui.view" id="reclamationform_view">
+            <field name="name">reclamation.form</field>
+            <field name="model">lb.reclamation</field>
+            <field name="arch" type="xml">
+                <form string="Réclamation Form">
+                    <sheet>
+					<group>
+                        <group>
+                            <field name="type_reclamation"/>
+                            <field name="resume_reclamation"/>
+                        </group>
+                         <group>
+                            <field name="date_reclamation"/>
+                            <field name="fichier"/>
+                        </group>
+					</group>
+                      <field name="notes" placeholder="Log a note..."/>
+                    <footer>
+                        <button string="Planifier" name="action_close_dialog" type="object" class="btn-primary"/>
+                        <button  string="Marque comme Terminé" name="action_done" type="object" class="btn-secondary"/>
+                    </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+
+
+       <record model="ir.actions.act_window" id="reclamation_action_view">
+            <field name="name">reclamation.action</field>
+           <field name="res_model">lb.reclamation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        
+        
+
+    <!--Agent-->
+    
+         <record model="ir.ui.menu" id="sale_commission.menu_agent_form">
+            <field name="name">Agents(bailleur/courtier)</field>
+        </record>
+
+
+	     <record model="ir.ui.menu" id="sale_commission.menu_agents_settlement">
+            <field name="name">Réglement des commissions</field>
+        </record>
+        
+        <record model="ir.ui.menu" id="sale_commission.menu_commission_make_invoices">
+            <field name="name">Creer des factures de commissions</field>
+        </record>
+
+         <record model="ir.ui.menu" id="sale_commission.menu_settle_commissions">
+            <field name="name">Réglements</field>
+        </record>
+        
+        
+         <record model="ir.ui.menu" id="sale_commission.menu_agent_form">
+            <field name="parent">location_biens.bien_menu</field>
+        </record>
+
+
+
+    </data>
+</odoo>

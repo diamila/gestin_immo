@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--Create PDF Report-->
+    <!--  https://www.youtube.com/watch?v=SkKAXURqNfQ&list=PLqRRLx0cl0hoJhjFWkFYowveq2Zn55dhM&index=24  -->
+    <!--  https://www.youtube.com/watch?v=qAv5GAmIryI&list=PLqRRLx0cl0hoJhjFWkFYowveq2Zn55dhM&index=25   -->
+    <template id="report_contrat_bailleur">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <br></br>
+                        <br></br>
+                        <br></br>
+                        <br></br>
+                        <div class="oe_structure"/>
+                        <div class="row">
+                            <div class="col-xs-2" style="margin:auto;">
+                            </div>
+                            <center>
+                                <div>
+
+                                         <h3>PROTOCOLE D’ACCORD D'UN(E) <strong t-field="o.categ_id"></strong></h3>
+                                         <br/>
+
+
+                                         <h4 style="text-align:left;">ET</h4>
+                                    <p style="text-align:left;">Le Bailleur, <strong t-field="o.civilite"/> <strong t-field="o.bailleur_id"/>
+                                        demeurant à <strong t-field="o.street"/> titulaire de la CIN n° <strong t-field="o.num_piece_identite"/>
+                                        tél : <strong t-field="o.mobile"/>
+                                        . propriétaire de <strong t-field="o.categ_id"/> "<strong style="color:#5338B6" t-field="o.name"/>"
+                                        aux <strong t-field="o.adresse"/> <strong t-field="o.rue"/> <strong t-field="o.ville"/>,</p>
+
+                                    <h4 style="text-align:left;">ET</h4>
+                                     <p style="text-align:left;">la Société DIMA GROUP (SDG), sise sur l'aéroport LSS, Lot N° E2, Dakar tél : 77 451 76 76/ 33 869 64 38, représentée par son
+                                         Directeur général Monsieur X, ci-après dénommée « SDG-SARL »
+                                     </p>
+
+                                     <h4 style="text-align:left;">Article 1 : Modalité</h4>
+                                     <p style="text-align:left;"><strong t-field="o.civilite"/> <strong t-field="o.bailleur_id"/> s’engage à payer la Société DIMA GROUP (SDG)
+                                     une commission de <!--<strong t-field="o.taux_commission"/>-->% sur le Montant loyer (mois) qui est égal à <strong style="color:#5338B6" t-field="o.list_price"/>
+                                         Ainsi l'agence va recevoir  <strong t-field="o.commision_agence"/>(CFA).
+                                     </p>
+
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <p style="text-align:right;"> Dakar, le <strong t-field="o.Date"></strong>
+                                    </p>
+
+
+                                    <p>
+                                    <font style="float:left">Bailleur</font>
+                                   <font style="float:right">Responsable Service Location</font>
+                                    </p>
+
+                                </div>
+
+                            </center>
+                            <!--adding the barcode to the report-->
+                            <!--  https://www.youtube.com/watch?v=bwT_ZtKWn9E&list=PLqRRLx0cl0hoJhjFWkFYowveq2Zn55dhM&index=51  -->
+                            <!--<table class="table table-bordered mb-0" style="border: 2px solid black;">-->
+                                <!--<tr>-->
+                                    <!--<td class="text-center align-middle" style="height: 6rem">-->
+                                        <!--<img alt="Barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', o.name_seq, 600, 150)" style="width:100%;height::4rem;"/>-->
+                                        <!--<span t-field="o.name_seq"/>-->
+                                    <!--</td>-->
+                                <!--</tr>-->
+                            <!--</table>-->
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

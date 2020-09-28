@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        
+        
+      
+        
+        
+        <!-- Locations form view -->
+        <record model="ir.ui.view" id="lb_paiement_location_view">
+            <field name="name">lb_paiement_location_form</field>
+            <field name="model">lb.paiement_location</field>
+            <field name="arch" type="xml">
+                <form string="facturation Form">
+                    
+                    <header position="inside">
+                        
+                         <button name="action_view_invoice" 
+                            style="background-color:#00FFFF"
+                            type="object"
+                            class="oe_stat_button" string="vue faturation"></button>
+                            
+                            
+                            
+                             <button name="action_view_sale_facture" type="object"
+                            class="oe_stat_button" string="creer facture"
+                            icon="fa-pencil-square-o"
+                            context="{'default_product_id': context.get('product_id', False),
+                            'default_partner_id': context.get('partner_id', False)}"></button>
+                            
+                             <field name="invoice_count" widget="statinfo" string="Invoices"/>
+              
+              
+                        
+              
+            </header>
+            
+        
+                    <sheet>
+              
+					             <group>
+					                 <group>
+                                        <field name="date_paiement"/>
+                                        <field name="partner_id"/>
+                                         
+				            	        </group>
+				            	     <group>
+				            	         <field name="product_id"/>
+				            	         <field name="montant_location"/>
+				            	       
+				            	     </group>
+				            	</group>
+				            	
+				            	<group> 
+				            	  
+				            	    <group>
+				            	        <field name="paiement" invisible="1"/>
+				            	        <field name="objet_paiement" invisible="1"/>
+				            	    </group> 
+				            	    <group>
+				            	        <field name="mois_payee_c" attrs="{'invisible':[('paiement','!=','mensuel')]}" invisible="1"/>
+				            	        <field name="mois_commencant" widget="selection" attrs="{'invisible':[('paiement','=','mensuel')]}" invisible="1"/>
+				            	        <field name="price_unit" invisible="1"/>
+				            	    </group>
+				            	</group>
+				            	
+                         <notebook>
+                             
+                            <page string="Enregistrement des paiements">
+                                <field name="invoice_line_ids">
+                                <tree string="Enregistrement des paiements">
+                                    
+                                        
+                                          <field name="product_id" />
+                                           <field name="bien_loue"/>
+                                          <field name="commentaire_paiement"/>
+                                         <field name="montant_paye" widget="monetary"/>
+					          	
+                                        
+                                </tree>
+                              </field>  
+                              
+                               <group class="oe_subtotal_footer oe_right" colspan="2">
+                                <field name="amount_untaxed" widget='monetary'/>
+                                <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                    <label for="price_unit"/>
+                                </div>
+                                <field name="price_unit" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary'/>
+                            </group>
+                            </page>
+					          	</notebook>
+					          	
+					          	 
+					          	
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        
+        
+        
+ 
+        
+        <record model="ir.ui.view" id="paiement_location_tree_view">
+            <field name="name">paiement_location.tree</field>
+            <field name="model">lb.paiement_location</field>
+            <field name="arch" type="xml">
+                <tree string="facturation Tree">
+                    <field name="product_id"/>
+                    <field name="categ_id"/>
+                    <field name="date_paiement"/>
+                    <field name="locataire_id"/>
+                    <field name="montant_paye"/>
+                    <field name="commision_bailleur" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        
+        
+        <!--
+         <record model="ir.ui.view" id="paiement_location_search_view">
+            <field name="name">paiement_location.search</field>
+            <field name="model">lb.paiement_location</field>
+            <field name="arch" type="xml">
+                <search string="Rechercher paiementLocation">
+                     <field name="product_id"/>
+                    <field name="categ_id"/>
+                    <field name="date_paiement"/>
+                    <field name="locataire_id"/>
+                    <field name="montant_paye"/>
+                    <field name="commision_bailleur"/>
+                        <filter string="Catégorie" name="categ" context="{'group_by':'product_id'}"/>
+                </search>
+            </field>
+        </record>
+        -->
+        
+        
+       
+        <record model="ir.actions.act_window" id="paiement_location_list_action_n">
+            <field name="name">facturation</field>
+            <field name="res_model">lb.paiement_location</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+           <!-- <field name="context">{'group_by': 'product_id'}</field>-->
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Créer une nouvelle facturation
+                </p>
+            </field>
+        </record>
+		
+		
+		
+		
+		  <record model="ir.ui.view" id="view_paiement_location_kanban">
+            <field name="name">paiement_location_kanban</field>
+            <field name="model">lb.paiement_location</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="color"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div
+                                    t-attf-class="oe_kanban_color_{{kanban_getcolor(record.color.raw_value)}}
+                                                  oe_kanban_global_click_edit oe_semantic_html_override
+                                                  oe_kanban_card {{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}}">
+                                <div class="oe_dropdown_kanban">
+                                    <!-- dropdown menu -->
+                                    <div class="oe_dropdown_toggle">
+                                        <i class="fa fa-bars fa-lg" title="Manage" aria-label="Manage"/>
+                                        <ul class="oe_dropdown_menu">
+                                            <li>
+                                                <a type="delete">Delete</a>
+                                            </li>
+                                            <li>
+                                                <ul class="oe_kanban_colorpicker"
+                                                    data-field="color"/>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="oe_clear"></div>
+                                </div>
+                                <div t-attf-class="oe_kanban_content">
+                                   <ul>
+                                        <li style="color:#8B0000">nom bien : <field name="product_id"/></li>
+                                        <li>type bien   :  <field name="categ_id"/></li>
+                                         <li>date paiement :<field name="date_paiement"/></li>
+                                         <li>locataire :<field name="locataire_id"/></li>
+                                          <li>prix loyer/mois :<field name="montant_location"/></li>
+                                </ul>
+                                <br/>
+                                
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        
+                  
+        <!--<menuitem id="paiement_location_list" name="FACTURATION location"
+                  parent="rental_app_menu" sequence="9"/>-->
+
+        <menuitem id="paiement_location_list_menu" name="Facturations"
+                  parent="rental_app_menu"
+                  action="paiement_location_list_action_n" sequence="3"/>        
+                  
+                  
+            
+                  
+     
+     
+        <!-- paiement_facturation form view -->
+
+        <record model="ir.ui.view" id="paiement_facturation_form_view">
+            <field name="name">paiement_facturation.form</field>
+            <field name="model">lb.paiement_facturation</field>
+            <field name="arch" type="xml">
+                <form string="history Form">
+                    <sheet>
+                        
+                        <group string="bien">
+                         <group>
+                               <field name="product_id"/>
+                               <field name="bien_loue"/>
+                               <field name="categ_id"/>
+                               <field name="locataire_id"/>
+                         </group>
+                         <group>
+                              <field name="montant_location"/>
+                              <field name="type"/>
+                             <field name="mobile"/>
+                         </group>
+                       </group>
+                      
+            
+                       
+                        <field name="commentaire_paiement"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+
+        <record model="ir.actions.act_window" id="paiement_facturation_list_action">
+            <field name="name">paiement_facturation bien</field>
+            <field name="res_model">lb.paiement_facturation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Créer un nouveau history
+                </p>
+            </field>
+        </record>
+
+
+                  
+
+
+    </data>
+</odoo>
+
+
+

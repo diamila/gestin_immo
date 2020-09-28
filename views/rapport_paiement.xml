@@ -1,0 +1,723 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+      
+     
+     
+     
+     <!--_____________Views________sale_view.xml_____________-->
+
+       <!--heritage du module sale.order(Heritage Vente)-->
+       <record id="sale_order_inherit" model="ir.ui.view">
+      <field name="name">sale.order.inherit</field>
+      <field name="model">sale.order</field>
+      <field name="inherit_id" ref="sale.view_order_form"/>
+      <field name="arch" type="xml">
+          
+          
+           <xpath expr="//field[@name='partner_id']" position="before">
+               <field name="type" invisible="1"></field>
+               <br/>
+               <br/>
+           </xpath>
+           
+           
+            <xpath expr="//field[@name='partner_id']" position="after">
+               <field name="product_id"></field>
+           </xpath>
+    
+           
+            <xpath expr="//field[@name='order_line']" position="attributes">
+                <attribute name="context">{'default_product_id': context.get('product_id', False)}</attribute>
+          </xpath>
+          
+    
+           
+           
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+             <attribute name="domain">[('client_type','=','client_ache') ,('active_potenctiel','=','client'), ('customer','=',True), ('parent_id', '=', False)]</attribute>
+          </xpath>
+          
+          
+          
+           <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="attributes">
+               <attribute name="string" >Prix</attribute>
+          </xpath>
+          
+           <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="attributes">
+               <attribute name="invisible">1</attribute>
+          </xpath>
+          
+          
+           <xpath expr="//field[@name='order_line']/tree/field[@name='qty_delivered']" position="attributes">
+               <attribute name="invisible">1</attribute>
+          </xpath>
+          
+          
+    
+               <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="attributes">
+               <attribute name="domain">[('type','!=','service')]</attribute>
+              </xpath>
+              
+               
+          
+      </field>
+      </record>
+      
+      
+      
+      
+      <!--modifier la ligne order_line de la (Heritage Vente)-->
+      <record id="sale_order_line_inherit" model="ir.ui.view">
+      <field name="name">sale.order.line.inherit</field>
+      <field name="model">sale.order.line</field>
+      <field name="inherit_id" ref="sale.view_order_line_tree"/>
+      <field name="arch" type="xml">
+          <!--<xpath expr="//field[@name='name']" position="after">
+               <field name="periode_fin"></field>
+          </xpath>-->
+           <field name="product_uom_qty" position="attributes">
+               <attribute name="invisible">1</attribute>
+           </field>
+           
+          
+           
+           
+                
+          
+      </field>
+    </record>
+    
+    
+    
+    
+    
+          
+          
+          
+      
+     <!--__________________form___account_invoice_view.xml_____________-->
+      <!--heritage du module account.invoice (heritage facture)-->
+      <record id="account_invoice_inherit" model="ir.ui.view">
+      <field name="name">account.invoice.inherit</field>
+      <field name="model">account.invoice</field>
+      <field name="inherit_id" ref="account.invoice_form"/>
+      <field name="arch" type="xml">
+          
+           
+        
+          
+          
+         
+           
+              <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='quantity']" position="after">
+               <field name="bailleur_id" invisible="1"></field>
+          </xpath>
+           
+           
+          
+        
+          
+           
+          <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='quantity']" position="attributes">
+               <attribute name="invisible">1</attribute>
+          </xpath>
+          <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_unit']" position="attributes">
+               <attribute name="string" >Prix</attribute>
+          </xpath>
+
+           
+           <xpath expr="//field[@name='user_id']" position="attributes">
+               <attribute name="string" >Comptable</attribute>
+                
+          </xpath>
+          
+          
+          
+           
+               
+          
+          <xpath expr="//field[@name='partner_id']" position="after">
+               <field name="type_bien" style="color:#8B0000"></field>
+               <br/>
+           </xpath>  
+           
+           
+           
+
+           
+           <xpath expr="//field[@name='type_bien']" position="after">
+               <field name="paiement" style="color:#8B0000"></field>
+           </xpath>  
+           
+           
+           
+           
+          
+           
+           <xpath expr="//field[@name='paiement']" position="after">
+              <field name="mois_payee_c" style="color:#8B0000"></field>
+           </xpath>  
+           
+            
+           
+           
+            <xpath expr="//field[@name='mois_payee_c']" position="after">
+               <field name="mois_commencant" style="color:#8B0000"></field>
+           </xpath>
+           
+           
+           
+           
+           <xpath expr="//field[@name='paiement']" position="attributes">
+                <attribute name="attrs">{'invisible': [('type_bien','!=','service')]}</attribute>
+          </xpath>
+          
+          
+           
+           <xpath expr="//field[@name='mois_payee_c']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('type_bien','!=','service'), ('paiement','!=','mensuel')]}</attribute>
+          </xpath>
+          
+          <xpath expr="//field[@name='mois_commencant']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('type_bien','!=','service'), ('paiement','=','mensuel')]}</attribute>
+          </xpath>
+          
+          
+          
+          
+          
+           
+          
+        
+           
+          
+           
+           
+            
+     </field>
+     </record>
+     
+     
+     
+     
+        
+        
+        
+     
+     
+       <!--modification de la vue invoice_line_ids (heritage facture) tree -->
+      <record model="ir.ui.view" id="account_invoice_line_tree">
+            <field name="name">account.invoice.line.tree</field>
+            <field name="model">account.invoice.line</field>
+            <field name="inherit_id" ref="account.view_invoice_line_tree"/>
+            <field name="arch" type="xml">
+                
+               <field name="quantity" position="attributes">
+               <attribute name="invisible">1</attribute>
+               </field>
+               
+               
+            
+               
+                 <xpath expr="//field[@name='price_unit']" position="attributes">
+               <attribute name="string" >PRIX</attribute>
+              </xpath>
+              
+              
+              <xpath expr="//field[@name='quantity']" position="after">
+               <field name="bailleur_id" invisible="1"></field>
+               </xpath>
+                
+                
+              
+
+            </field>
+        </record>
+        
+        
+        
+               <!--
+               
+      <record model="ir.ui.view" id="account_invoice_form_n">
+            <field name="name">account.invoice.line.form_n</field>
+            <field name="model">account.invoice.line</field>
+            <field name="inherit_id" ref="account.view_invoice_line_form"/>
+            <field name="arch" type="xml">
+        
+             <xpath expr="//field[@name='product_id']" position="attributes">
+               <attribute name="context" >{'product_id': product_id}</attribute>
+              </xpath>
+            
+            
+            </field>
+        </record>
+        
+-->
+
+
+
+       <!--modification de la vue sale.order tree -->
+      <record model="ir.ui.view" id="account_sinvoice_tree">
+            <field name="name">account.invoice.tree</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_tree_with_onboarding"/>
+            <field name="arch" type="xml">
+               <xpath expr="//field[@name='user_id']" position="attributes">
+               <attribute name="string" >Comptable</attribute>
+               </xpath>
+
+
+            </field>
+            
+            </record>
+            
+            
+            
+                     <!-- account.invoice search view -->
+       <record model="ir.ui.view" id="account_sinvoice_search">
+            <field name="name">account.invoice.search</field>
+            <field name="model">account.invoice</field>
+          <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='draft']" position="after">
+                      <filter string="bien vendu"  name="facture_vente" domain="[('type_bien', '!=', 'service')]"/>
+                </xpath>
+                
+                <xpath expr="//filter[@name='facture_vente']" position="after">
+                      <filter string="bien location"  name="facture_location" domain="[('type_bien', '!=', 'consu')]"/>
+                </xpath>
+                
+                <xpath expr="//filter[@name='facture_location']" position="after">
+                      <filter string="facture client"  name="customer" domain="[('customer', '=', True)]"/>
+                </xpath>
+                
+                
+            </field>
+        </record>
+        
+        
+       
+        <!--
+        
+         
+       <record model="ir.actions.act_window" id="rapport_paiement_account_invoice_action">
+            <field name="name">rapport</field>
+            <field name="model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+         
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Créer un nouveau rapport account_invoice
+                </p>
+            </field>
+        </record>-->
+
+
+
+
+
+          <!--modification de la vue sale.order tree -->
+      <record model="ir.ui.view" id="sale_order_tree">
+            <field name="name">sale.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">
+               <xpath expr="//field[@name='user_id']" position="attributes">
+               <attribute name="string" >Comptable</attribute>
+          </xpath>
+            </field>
+        </record>
+        
+        
+        
+        
+         <!--modification de la vue sale.order commande tree -->
+      <record model="ir.ui.view" id="sale_order_tree">
+            <field name="name">sale.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+            <field name="arch" type="xml">
+               <xpath expr="//field[@name='user_id']" position="attributes">
+               <attribute name="string" >Comptable</attribute>
+          </xpath>
+            </field>
+        </record>
+         
+      <!--action pr menu rapport-->
+       <record model="ir.actions.act_window" id="rapport_paiement_list_action">
+            <field name="name">rapport</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Créer un nouveau rapport
+                </p>
+            </field>
+        </record>
+        
+        
+        
+        
+        
+        
+        
+
+
+         <menuitem id="rapport_menu" name="RAPPORTS"
+                  parent="rental_app_menu" sequence="8"/>
+                    <!--  
+    
+        <menuitem id="rapport_rapport_menu" name="Factures de vente"
+                   parent="contrat_vente_menu" 
+                  action="rapport_paiement_list_action" sequence="4"/>
+                
+                  
+           
+         <menuitem id="rapport_rapport_menu" name="Factures de vente"
+                   parent="rapport_menu" 
+                  action="rapport_paiement_list_action" sequence="4"/>
+              
+
+        -->
+     
+        
+        
+        
+        
+        
+         <record model="ir.actions.act_window" id="list_action_account">
+            <field name="name">line</field>
+            <field name="res_model">account.invoice.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Créer un nouveau Locataire
+                </p>
+            </field>
+        </record>
+
+
+
+
+          
+
+       
+
+        <!--<menuitem id="rapport_rapport_menu" name="facture vente"
+                  parent="contrat_vente_menu" 
+                  action="rapport_paiement_list_action" sequence="1"/>-->
+                  
+                  
+                  
+                  
+                  
+                   
+                  <!--___________________________________________________________________-->
+       <record model="ir.actions.act_window" id="rapport_paiement_list_action_vendu">
+            <field name="name">rapport bon facture</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('type_bien', '!=', 'service')]</field>
+            <field name="view_id" ref="account.invoice_tree_with_onboarding"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Vente Vu factures
+                </p>
+            </field>
+        </record>
+        
+                <!--  
+                  
+          <menuitem id="rapport_rapport_menu_all_vente" name="Vu factures vente"
+                  parent="contrat_vente_menu_vente"
+                  action="rapport_paiement_list_action_vendu" sequence="6"/>   -->  
+                  
+                  
+                  
+        <menuitem id="contrat_vente_facture_vu" name="List Factures"
+                  parent="contrat_vente_menu_vente"
+                  action="rapport_paiement_list_action_vendu" sequence="3"/>
+                  
+                  
+                  <!--____________-->
+       <record model="ir.actions.act_window" id="rapport_paiement_list_action_location_n">
+            <field name="name">rapport bon facture</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+             <field name="domain">[('type_bien', '=', 'service'), ('customer', '=', True)]]</field>
+             <field name="context">{'no_create': True}</field>
+            <field name="view_id" ref="account.invoice_tree_with_onboarding"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                   Locaton Vu factures
+                </p>
+            </field>
+        </record>
+        
+                  
+                  
+          <menuitem id="rapport_rapport_menu_all_location_n" name="List factures"
+                  parent="rental_app_menu"
+                  action="rapport_paiement_list_action_location_n" sequence="6"/>       
+                  
+                  
+             <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->     
+                  
+           <!--action pr menu bon facture-->
+      
+              <!--action pr menu bon facture-->
+       <record model="ir.actions.act_window" id="rapport_paiement_list_action_all">
+            <field name="name">vue d'ensemble comptables</field>
+            <field name="res_model">account.journal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="account.account_journal_dashboard_kanban_view"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    vue d'ensemble comptables
+                </p>
+            </field>
+        </record>
+        
+        
+        
+          <menuitem id="rental_app_menu_comptable" name="Vus Comptable"
+                  parent="main_rental_app_menu"
+                  sequence="6" />
+                  
+                  
+          <menuitem id="rapport_rapport_vue_densemble" name="Vue d'ensemble Comptable"
+                  parent="rental_app_menu_comptable" 
+                  action="rapport_paiement_list_action_all" sequence="1"/>  
+                  
+                  
+                      
+             <record model="ir.actions.act_window" id="rapport_paiement_list_action_list_all_facture">
+            <field name="name">les factures</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,form</field>
+             <field name="context">{'no_create': True}</field>
+            <field name="view_id" ref="account.invoice_tree_with_onboarding"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Tous les factures
+                </p>
+            </field>
+        </record>
+        
+        <menuitem id="rapport_rapport_menu_all_factures_facture" name="Factures"
+                  parent="rental_app_menu_comptable" 
+                  action="rapport_paiement_list_action_list_all_facture" sequence="2"/>  
+                  
+                  
+                  
+                  
+        <!--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\-->        
+       <!--Commission Gestion-->
+       
+       
+          <menuitem id="rental_app_menu_commission" name="Commissions Management"
+                  parent="main_rental_app_menu"
+                  sequence="5" />
+                  
+     
+                  
+       
+             <!--action type commision-->
+       <record model="ir.actions.act_window" id="rapport_paiement_list_action_commission">
+            <field name="name">Type commission</field>
+            <field name="res_model">sale.commission</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="sale_commission.sale_commission_tree"/> 
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                   types Commission 
+                </p>
+            </field>
+        </record>
+        
+        
+        
+                  
+                  
+          <menuitem id="rapport_rapport_menu_all" name="Type Commisions"
+                  parent="rental_app_menu_commission" 
+                  action="rapport_paiement_list_action_commission" sequence="3"/> 
+                  
+                  
+          
+             <!--action pr menu Réglements-->
+       <record model="ir.actions.act_window" id="rapport_paiement_list_action_settlement">
+            <field name="name">Réglement</field>
+            <field name="res_model">sale.commission.settlement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="sale_commission.view_settlement_tree"/> 
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                   Réglements
+                </p>
+            </field>
+        </record>
+        
+        
+        
+        
+        
+                  
+                  
+          <menuitem id="rapport_rapport_menu_all_reglement" name="Réglements"
+                  parent="rental_app_menu_commission" 
+                  action="rapport_paiement_list_action_settlement" sequence="4"/>      
+                  
+                  
+                  
+          <!--Agent-->
+          
+          <record id="view_res_partner_filter_statut_agent" model="ir.ui.view">
+       <field name="name">statut_agent</field>
+       <field name="model">res.partner</field>
+       <field name="inherit_id" ref="base.view_res_partner_filter"/>
+       <field name="arch" type="xml">
+           <filter name="agent" position="after">
+               <filter string="Bailleur" name="bailleur" domain="[('statut_agent', '=', 'bailleur')]"/>
+           </filter>
+           <filter name="bailleur" position="after">
+               <filter string="Courtier_V" name="courtier" domain="[('statut_agent', '=', 'courtier')]"/>
+           </filter>
+           
+        </field>
+   </record>
+
+  
+   
+                       
+                   <!--action pr menu Réglements-->
+       <record model="ir.actions.act_window" id="rapport_paiement_list_action_bailleur">
+            <field name="name">rapport bon facture</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+             <field name="domain">[('statut_agent', '=', 'bailleur')]</field>
+            <field name="context">{"search_default_agent": 1, 'default_agent': 1, 'default_customer': 0, 'default_supplier': 1, 'default_statut_agent' : 'bailleur'}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                  Bailleurs
+                </p>
+            </field>
+        </record>
+        
+        
+        
+        <record model="ir.actions.act_window" id="rapport_paiement_list_action_courtier">
+            <field name="name">rapport bon facture</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+             <field name="domain">[('statut_agent', '=', 'courtier')]</field>
+            <field name="context">{"search_default_agent": 1, 'default_agent': 1, 'default_customer': 0, 'default_supplier': 1, 'default_statut_agent' : 'courtier'}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                   Courtiers
+                </p>
+            </field>
+        </record>
+        
+   
+        
+        
+        
+        
+        
+                  
+                  
+          <menuitem id="rapport_rapport_menu_all_bailleur" name="Bailleurs"
+                  parent="rental_app_menu_commission" 
+                  action="rapport_paiement_list_action_bailleur" sequence="1"/>   
+                  
+           <menuitem id="rapport_rapport_menu_all_courtier" name="Courtiers_Vente"
+                  parent="rental_app_menu_commission" 
+                  action="rapport_paiement_list_action_courtier" sequence="2"/>   
+                            
+                 
+                  
+                 <!--    <menuitem id="rapport_rapport_settlementt" name="create facture commission"
+                  parent="rental_app_menu_commission" 
+                  action="rapport_paiement_list_settlement_line" sequence="6"/>   
+                  
+                  
+       
+       
+         <record model="ir.actions.act_window" id="rapport_paiement_list_settlement_line">
+            <field name="name">rapport bon facture</field>
+            <field name="res_model">sale.commission.settlement.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Vente Vu factures
+                </p>
+            </field>
+        </record>
+     -->
+     
+      <!--<menuitem id="rapport_rapport_menu_acocount" name="account"
+                  parent="rapport_menu"
+                  action="list_action_account" sequence="3"/> -->
+                  
+                  
+      <!--Reglement Des Commisions-->    
+       <record model="ir.actions.act_window" id="sale_commission_make_invoice_reglement">
+            <field name="name">Reglement Des Commisions</field>
+            <field name="res_model">sale.commission.make.settle</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sale_commission.view_settled_wizard"/>
+             <field name="target">new</field>
+        </record>
+        
+                  
+           <menuitem id="sale_commission_make_invoice_commision" name="Reglement Des Commisions"
+                  parent="rental_app_menu_commission" 
+                  action="sale_commission_make_invoice_reglement" sequence="5"/>   
+        
+                  
+                  
+                  
+                  
+                  
+      <!--	sale_commission.sale_commission_make_invoice_form-->
+       <record model="ir.actions.act_window" id="sale_commission_make_invoice_form_edit">
+            <field name="name">creer des factures commissions</field>
+            <field name="res_model">sale.commission.make.invoice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sale_commission.sale_commission_make_invoice_form"/>
+             <field name="target">new</field>
+        </record>
+        
+                  
+           <menuitem id="rapport_rapport_menu_invoice_form" name="Creer des factures commissions"
+                  parent="rental_app_menu_commission" 
+                  action="sale_commission_make_invoice_form_edit" sequence="6"/>   
+        
+      
+      
+                  
+                  
+                 
+                  
+                  
+         
+         
+
+  </data>
+</odoo>

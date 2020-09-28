@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--Create PDF Report-->
+    <!--  https://www.youtube.com/watch?v=SkKAXURqNfQ&list=PLqRRLx0cl0hoJhjFWkFYowveq2Zn55dhM&index=24  -->
+    <!--  https://www.youtube.com/watch?v=qAv5GAmIryI&list=PLqRRLx0cl0hoJhjFWkFYowveq2Zn55dhM&index=25   -->
+    <template id="report_contrat_vente">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <br></br>
+                        <br></br>
+                        <br></br>
+                        <br></br>
+                        <div class="oe_structure"/>
+                        <div class="row">
+                            <div class="col-xs-2" style="margin:auto;">
+                            </div>
+                            <center>
+                                <div>
+
+                                    <h3>ref:contrat :<strong t-field="o.contrat_id"></strong></h3>
+                                         <br/>
+                                         <br/>
+
+                                         <h3>CONTRAT DE VENTE</h3>
+                                         <br/>
+
+
+                                         <h4 style="text-align:left;">ENTRE LES SOUSSIGNES</h4>
+                                    <p style="text-align:left;">La Société DIMA GROUP (SDG) représenté par son Directeur Général,
+                                        Monsieur XXXXXX en ses bureaux à Cité Mourtada , Rte de l'aéroport LSS, Lot N° E2, Dakar tél : 77 451 76 76/ 33 869 64 38.
+                                        , gérant de <strong t-field="o.categ_id"/> "<strong style="color:#5338B6" t-field="o.bien_loue"/>" aux <strong t-field="o.adresse"/>
+                                        <strong t-field="o.rue"/> <strong t-field="o.ville"/></p>
+
+                                    <h4 style="text-align:left;">ET</h4>
+
+                                    <p style="text-align:left;">Le Client, <strong t-field="o.title"/> <strong t-field="o.locataires"/> CIN : N° <strong t-field="o.cin_ou_passeport"/>, demeurant à  <strong t-field="o.adresse_locataire"/>.</p>
+
+
+                                     <h4 style="text-align:left;">IL A ETE CONVENU ET ARRETE CE QUI SUIT :</h4>
+
+                                    <p style="text-align:left;">
+                                        Le bailleur représenté par la Société DIMA GROUP (SDG) vend
+
+                                    </p>
+
+
+                                     <h4 style="text-align:left;">Article 1 : DESIGNATION DU LOCAL:</h4>
+                                    
+                                     <p style="text-align:left;" t-if="o.categ_id != 'terrain' and o.categ_id != 'Terrain'" >Situation : <strong t-field="o.bien_loue"> </strong>
+                                   
+                                    aaux <strong t-field="o.adresse"/>
+                                        <strong t-field="o.rue"/> <strong t-field="o.ville"/>,
+                                        <p t-if="o.nbre_tour"> niveau: <strong  t-field="o.nbre_tour"></strong> </p>
+                                        <br/>
+                                    </p>.
+                                    
+                                     <p style="text-align:left;" t-if="o.categ_id != 'terrain' and o.categ_id != 'Terrain'">Description : 
+                                         <strong t-field="o.chambres" t-if="o.chambres" /> chambre,
+                                         <strong t-field="o.salons" t-if="o.salons" /> salon, <strong t-field="o.salles_bain" t-if="o.salles_bain" /> salle de bain,
+                                         <strong t-field="o.cuisines" t-if="o.cuisines" /> cuisine, <strong t-field="o.toilette" t-if="o.toilette" /> toilette,
+                                         <strong t-field="o.cour" t-if="o.cour" /> espace familiale, <strong t-field="o.parking" t-if="o.parking" /> parking,
+                                          <strong t-field="o.balcon" t-if="o.balcon" /> balcon.</p>
+
+                                     <p style="text-align:left;" t-if="o.categ_id != 'terrain' and o.categ_id != 'Terrain'" >Composants supplémentaires :
+                                         <strong  t-if="o.ascenseur  == True">Ascenseur : <strong t-field="o.ascenseur" />,</strong>
+                                         <strong t-if="o.g_electroge == True">Groupe Electrogène : <strong t-field="o.g_electroge" />,</strong>
+                                         <strong t-if="o.jardin == True">Jardin : <strong t-field="o.jardin" /></strong>
+                                     </p>     
+                                         
+                                         
+                                        
+                                         <p style="text-align:left;" t-if="o.categ_id == 'terrain' and o.categ_id == 'Terrain'" >Situation : <strong t-field="o.bien_loue"> </strong>
+                                          de <strong t-field="o.categ_id"></strong> 
+                                         aaux <strong t-field="o.adresse"/>
+                                        <strong t-field="o.rue"/> <strong t-field="o.ville"/>,
+                                    superficie: <strong t-field="o.superficie"></strong>
+                                    </p>.
+                                    
+
+                                    <h4 style="text-align:left;">Article 2: CONDITIONS :</h4>
+                                <p style="text-align:left;">Le présent bail est conclu suivant les conditions suivantes :
+                                    1. L’établissement, d’un état des lieux contradictoire par acte sous seing privé lors de la remise des clés au locataire et lors de leur restitution.</p>
+
+
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <h4 style="text-align:left;">2. Vente</h4>
+                                    <p style="text-align:left;">Le montant  est <strong t-field="o.loyer_sans_charges"/> Francs CFA <br/>
+                                        Le paiement peut se faire par virement bancaire ou par un versement en espèces <br></br>
+                                        le client devra payer des frais du TVA <strong t-field="o.standard_price"/>FCFA, dans la comptabilité de la Société DIMA GROUP (SDG)<br></br>
+
+                                    </p>
+
+                                     <h4 style="text-align:left;">Article 3 : RESILIATION DU CONTRAT PAR CONGE</h4>
+                                    <p style="text-align:left;">
+                                        Les parties se reconnaissent mutuellement le droit de résilier le contrat suivant les conditions qui suivent :<br/>
+                                        <ul>
+                                            <li>Le bailleur, il a le droit de reprendre les locaux qu’il a loués pour les occuper personnellement ou pour les démolir et
+                                                les reconstruire en servant au preneur un préavis de congé par acte extrajudiciaire assorti d’un préavis de six (06) mois. </li>
+                                             <li>
+                                                 Le client a le droit de résilier le Contrat en servant au Bailleur  un préavis de congé par lettre recommandée avec
+                                                 accusé de réception ou acte extrajudiciaire assorti d’un préavis de deux (02) mois.
+                                             </li>
+                                        </ul>
+                                    </p>
+
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <p style="text-align:right;"> Dakar, le <strong t-field="o.date"></strong>
+                                    </p>
+
+
+                                    <p>
+                                    <font style="float:left">Client</font>
+                                   <font style="float:right">Bailleur</font>
+                                    </p>
+
+                                </div>
+
+                            </center>
+                            <!--adding the barcode to the report-->
+                            <!--  https://www.youtube.com/watch?v=bwT_ZtKWn9E&list=PLqRRLx0cl0hoJhjFWkFYowveq2Zn55dhM&index=51  -->
+                            <!--<table class="table table-bordered mb-0" style="border: 2px solid black;">-->
+                                <!--<tr>-->
+                                    <!--<td class="text-center align-middle" style="height: 6rem">-->
+                                        <!--<img alt="Barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', o.name_seq, 600, 150)" style="width:100%;height::4rem;"/>-->
+                                        <!--<span t-field="o.name_seq"/>-->
+                                    <!--</td>-->
+                                <!--</tr>-->
+                            <!--</table>-->
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

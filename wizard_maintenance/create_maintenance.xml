@@ -1,0 +1,45 @@
+
+<odoo>
+  <data>
+
+    <!--Create a Wizard and Call it in Button Click Odoo-->
+    <!--  https://www.youtube.com/watch?v=K60oF3-vaxA&list=PLqRRLx0cl0hoJhjFWkFYowveq2Zn55dhM&index=36  -->
+    <!--How To Call Wizard From Menu Item Odoo-->
+    <!--  https://www.youtube.com/watch?v=qpkVKy9JzEw&list=PLqRRLx0cl0hoJhjFWkFYowveq2Zn55dhM&index=37 -->
+<!--
+
+
+      -->
+
+    <record id="create_maintenance_form" model="ir.ui.view">
+         <field name="name">create.maintenance.wizard</field>
+         <field name="model">create.maintenance</field>
+         <field name="arch" type="xml">
+           <form string="Create Maintenance">
+               <group>
+                    <field name="name"/>
+                    <field name="bien_loue"/>
+                </group>
+                <footer>
+                    <button name="create_maintenance" string="Create" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+         </field>
+     </record>
+
+    <record id="open_create_maintenance" model="ir.actions.act_window">
+        <field name="name">Create Maintenance</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">create.maintenance</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="create_maintenance_form"/>
+        <field name="target">new</field>
+    </record>
+
+
+
+
+
+  </data>
+</odoo>
