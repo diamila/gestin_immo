@@ -26,3 +26,9 @@ access_sale_lb_courtier,access_lb_courtier,model_lb_courtier,sales_team.group_sa
 
 access_sale_lb_quartier,access_lb_quartier,model_lb_quartier,sales_team.group_sale_manager,1,1,1,1
 access_sale_lb_ville,access_lb_ville,model_lb_ville,sales_team.group_sale_manager,1,1,1,1
+
+
+access_sale_lb_type_piece,access_lb_type_piece,model_lb_type_piece,sales_team.group_sale_manager,1,1,1,1
+
+access_sale_lb_type_lieu,access_lb_type_lieu,model_lb_type_lieu,sales_team.group_sale_manager,1,1,1,1
+

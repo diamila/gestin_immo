@@ -45,7 +45,7 @@
                                     <tree string="Etat des lieux">
                                         <field name="nom_piece"/>
                                         <field name="Etat"/>
-                                        <field name="photos" widget="image" rel='lightbox'/>
+                                        <field name="photos"/>
                                         <field name="fichier"/>
                                     </tree>
                                 </field>
@@ -190,7 +190,7 @@
                             <field name="Etat"/>
                             <field name="commentaires"/>
                             
-                            <field name="photos" widget="image" style=" width: 850px; margin: 0px auto; position: relative; top: 70px;" />
+                            <field name="photos" widget="image"/>
                             <field name="fichier"/>
                         </group>
 					</group>

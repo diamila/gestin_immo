@@ -20,7 +20,7 @@
                             <center>
                                 <div>
 
-                                    <h3>ref:contrat :<strong t-field="o.contrat_id"></strong></h3>
+                                   <!-- <h3>ref:contrat :<strong t-field="o.contrat_id"></strong></h3>-->
                                          <br/>
                                          <br/>
 

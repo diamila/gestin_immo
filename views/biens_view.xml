@@ -23,11 +23,18 @@
 
 
         <!--ARTICLE-->
-         <record id="product_template_inherit" model="ir.ui.view">
+         <record id="product_template_inherite" model="ir.ui.view">
       <field name="name">product.product.inherit</field>
       <field name="model">product.product</field>
       <field name="inherit_id" ref="product.product_normal_form_view"/>
       <field name="arch" type="xml">
+          
+          
+          <xpath expr="//span[@class='o_stat_text']" position="replace">
+              <span class="o_stat">Facture</span>
+          </xpath>
+          
+          
           <button name="toggle_active" position="before"> 
            <button name="print_report" type="object" string="Imprimé contrat bailleur" style="background-color:#B0C4DE" invisible="1"/>
           </button>
@@ -37,7 +44,7 @@
           
           
           <button name="toggle_active" position="after" >
-              <button name="tt_locate_bien" widget="map" string="obtenir l'emplacement" type="object" class="oe_stat_button" style="background-color:#87CEFA">
+              <button name="tt_locate_bien" widget="map" string="Obtenir l'emplacement" type="object" class="oe_stat_button" style="background-color:#87CEFA">
                   <i class="fa fa-map-marker"></i>
               </button>
           </button>
@@ -73,11 +80,14 @@
            </button>
               </button>
 
-
-
+    <!--
+         <field name="name" position="replace">
+               <field name="name"/>
+           </field>-->
 
           
-          
+         
+
 
 
          <!--
@@ -97,21 +107,17 @@
                <xpath expr="//label[@for='standard_price']" position="attributes">
                <attribute name="invisible">1</attribute>
            </xpath>
-
-
+           
+          
 
     
-          <xpath expr="//span[@class='o_stat_text']" position="replace">
-              <span class="o_stat">Factures</span>
-          </xpath>
-
-
+         
             
             
             
 
           <xpath expr="//label[@for='sale_ok']" position="replace">
-               <label for="sale_ok"  string="Peut étre vendu/location"/>
+               <label for="sale_ok"  string="Peut étre vendu/louer"/>
            </xpath>
 
            <xpath expr="//field[@name='purchase_ok']" position="replace">
@@ -129,15 +135,14 @@
 
 
            <xpath expr="//field[@name='categ_id']" position="attributes">
-               <attribute name="string" >Catégorie du Bien</attribute>
+               <attribute name="string" >Catégorie du bien</attribute>
           </xpath>
 
 
-          <xpath expr="//field[@name='taxes_id']" position="attributes">
-               <attribute name="string" >Taxe</attribute>
+         
+             <xpath expr="//field[@name='taxes_id']" position="attributes">
+               <attribute name="string" >Taxes</attribute>
           </xpath>
-
-
 
 
 
@@ -148,7 +153,7 @@
 
 
            <xpath expr="//field[@name='type']" position="attributes">
-               <attribute name="string" >Type</attribute>
+               <attribute name="string" >Type de bien</attribute>
           </xpath>
 
           <!--
@@ -206,14 +211,14 @@
                 
                  <xpath expr="//field[@name='lst_price']" position="replace">
 
-                  <field name="lst_price" widget='monetary' string="prix vente" attrs="{'invisible': [('type','=','service')]}"/>
+                  <field name="lst_price" widget='monetary' string="Prix de vente" attrs="{'invisible': [('type','=','service')]}"/>
                 
                 </xpath>
                 
                 
                 <xpath expr="//field[@name='lst_price']" position="after">
 
-                  <field name="lst_price" placeholder="prix" string="prix location" attrs="{'invisible': [('type','!=','service')]}"/>
+                  <field name="lst_price" placeholder="prix" string="Prix de location" attrs="{'invisible': [('type','!=','service')]}"/>
                 
                 </xpath>
 
@@ -234,6 +239,10 @@
                <sheet>
                    <group>
                        <field name="name_categ_id" invisible="1"/>
+                         
+                      <field name="ref" invisible="1"/>
+                      <field name="name_seq" readonly="1"/>
+           
                        <!--<field name="contrat" style="text-align:left" placeholder="si le bien est lié à un contrat dc veiller l'ajouter..."/>-->
                    <field name="superficie" attrs="{'invisible': [('name_categ_id','!=', 'terrain'), ('name_categ_id','!=', 'Terrain')]}"></field>
                    </group>
@@ -244,21 +253,22 @@
             
 
           <xpath expr="//page[@name='general_information']" position="after">
-              <page string="info supémentaire">
+              <page string="Info supémentaire">
                   <group>
                       <group>
+                          
                        <field name="bailleur_id" string="bailleur" invisible="1"></field>
                           <field name="taux_commission" invisible="1"></field>
                        <field name="Date"/>
                        <field name="nbre_tour" attrs="{'invisible': ['|', ('name_categ_id','=', 'terrain'), ('name_categ_id','=', 'Terrain')]}"/>
                        <field name="ameublement" attrs="{'invisible': ['|', ('name_categ_id','=', 'terrain'), ('name_categ_id','=', 'Terrain')]}"/>
-                          <field name="gestionnaire_id" attrs="{'invisible': ['|', ('name_categ_id','=', 'terrain'), ('name_categ_id','=', 'Terrain')]}"/>
+                          <field name="gestionnaire_id" attrs="{'invisible': ['|', ('name_categ_id','=', 'terrain'), ('name_categ_id','=', 'Terrain')]}" invisible="1"/>
                            <field name="oriente_vers" attrs="{'invisible': ['|', ('name_categ_id','=', 'terrain'), ('name_categ_id','=', 'Terrain')]}"/>
                       </group>
 
                        <group>
-                         <field name="latitude" string="latitude"/>
-                         <field name="longitude" string="longitude"/>
+                         <field name="latitude" string="Latitude"/>
+                         <field name="longitude" string="Longitude"/>
                            <field name="rue"/>
                          <field name="adresse"/>
                         <field name="ville"  class="o_address_city"/>
@@ -298,7 +308,7 @@
                  </page>
               </page>
               </page>
-               <page string="Lieu Plus Proche">
+               <page string="Lieux Plus Proche">
                   <group>
                       <field name="plus_proche_ids"/>
                   </group>
@@ -362,7 +372,7 @@
                 <xpath expr="//div[@name='type']" position="after">
                     <div name="addresse">
                                 <ul>
-                                    <li><strong> adresse : <field name="adresse"/></strong></li>
+                                    <li><strong> Adresse : <field name="adresse"/></strong></li>
                                 </ul>
                     </div>
                 </xpath>         
@@ -412,7 +422,7 @@
 
                <!--action bien-->
         <record model="ir.actions.act_window" id="article_list_action_location">
-            <field name="name">Biens en location</field>
+            <field name="name">Biens à louer</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
@@ -420,7 +430,7 @@
             <field name="context">{'group_by': 'categ_id','default_type' : 'service'}</field>  
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                  Biens en Location
+                  Biens à louer
                 </p>
             </field>
         </record>
@@ -444,13 +454,13 @@
         
 
 
-        <menuitem id="articless_menu_location_produit" name="Biens en Location"
+        <menuitem id="articless_menu_location_produit" name="Biens à louer"
                   parent="rental_app_menu"
                   action="article_list_action_location" sequence="1"/>
                   
                   
                   
-        <menuitem id="articless_menu_vendu_produit" name="Biens à Vendre"
+        <menuitem id="articless_menu_vendu_produit" name="Biens à vendre"
                 parent="contrat_vente_menu_vente"
                 action="article_list_action_vente" sequence="1"/>   
 
@@ -589,7 +599,7 @@
             <field name="name">type.form</field>
             <field name="model">lb.lieu</field>
             <field name="arch" type="xml">
-                <form string="lieu plus proche Form">
+                <form string="lieux plus proche Form">
                     <sheet>
                         <group>
                             <field name="name_lieu"/>
@@ -605,7 +615,7 @@
             <field name="name">lieu.tree</field>
             <field name="model">lb.lieu</field>
             <field name="arch" type="xml">
-                <tree string="lieu plus proche Tree">
+                <tree string="lieux plus proche Tree">
                      <field name="name_lieu"/>
                     <field name="type_lieu"/>
                     <field name="distance"/>
@@ -630,10 +640,10 @@
             <field name="name">type.form</field>
             <field name="model">lb.sous_propriete</field>
             <field name="arch" type="xml">
-                <form string="détail piéces">
+                <form string="Détail piéces">
                     <sheet>
                         <group>
-                             <field name="type_chambre"/>
+                             <field name="type_piece"/>
                              <field name="height"/>
                              <field name="width"/>
                         </group>
@@ -648,8 +658,8 @@
             <field name="name">composant.tree</field>
             <field name="model">lb.sous_propriete</field>
             <field name="arch" type="xml">
-                <tree string="piéce Tree">
-                    <field name="type_chambre"/>
+                <tree string="Piéce Tree">
+                    <field name="type_piece"/>
                     <field name="height"/>
                     <field name="width"/>
                 </tree>
@@ -667,6 +677,9 @@
                 </p>
             </field>
         </record>
+        
+        
+        
 
         <!--Plans d'étage, photos et documents-->
          <!--form plan d'étage-->
@@ -811,7 +824,7 @@
           <field name="cout_maintenance"/>
         </xpath>
           <xpath expr="//field[@name='cout_maintenance']" position="after">
-          <field name="bien_loue" string="Bien A Réparer"/>
+          <field name="bien_loue" string="Bien à réparer"/>
         </xpath>
       </field>
     </record>
@@ -842,8 +855,8 @@
       <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
       <field name="arch" type="xml">
           <header position="inside">
-              <button name="locataires" type="object" string="Vu Locataires" class="oe_stat_button" style="background-color:#00FFFF" attrs="{'invisible': [('besoin','=','ach')]}"/>
-              <button name="acheteurs" type="object" string="Vu Acheteurs" class="oe_stat_button" style="background-color:#A1D5F7" attrs="{'invisible': [('besoin','=','location')]}"/>
+              <button name="locataires" type="object" string="Vue locataires" class="oe_stat_button" style="background-color:#00FFFF" attrs="{'invisible': [('besoin','=','ach')]}"/>
+              <button name="acheteurs" type="object" string="Vue acheteurs" class="oe_stat_button" style="background-color:#A1D5F7" attrs="{'invisible': [('besoin','=','location')]}"/>
           </header>
 
         <xpath expr="//field[@name='phone']" position="after">
@@ -865,6 +878,10 @@
 
            <field name="partner_id" position="before">
                   <field name="besoin"/>
+           </field>
+           
+            <field name="besoin" position="after">
+                  <field name="type_besoin"/>
            </field>
 
 
@@ -909,8 +926,8 @@
 
 
           <button name="action_schedule_meeting" position="before">
-              <button style="background-color:#00FFFF;border-radius:10px" attrs="{'invisible': [('besoin','!=','location')]}" name="terminer_basculer" type="object" string="add comme un locataire"/>
-               <button style="background-color:#A1D5F7;border-radius:15px" attrs="{'invisible': [('besoin','!=','ach')]}" name="terminer_basculer_acheteur" type="object" string="add comme un acheteur"/>
+              <button style="background-color:#00FFFF;border-radius:10px" attrs="{'invisible': [('besoin','!=','location')]}" name="terminer_basculer" type="object" string="Add comme un locataire"/>
+               <button style="background-color:#A1D5F7;border-radius:15px" attrs="{'invisible': [('besoin','!=','ach')]}" name="terminer_basculer_acheteur" type="object" string="Add comme un acheteur"/>
           </button>
 
 
@@ -951,10 +968,16 @@
         <xpath expr="//field[@name='partner_id']" position="after">
           <field name="type_propect"/>
         </xpath>
-
-          <xpath expr="//field[@name='name']"  position="attributes">
-               <attribute name="placeholder" >EX:Besoin typeBien adresseSouhaiter</attribute>
+        
+        <xpath expr="//field[@name='type_propect']" position="after">
+          <field name="type_besoin"/>
+        </xpath>
+        
+         <xpath expr="//field[@name='type_besoin']"  position="attributes">
+               <attribute name="placeholder" >EX:Besoin d'un appartement à Fann</attribute>
           </xpath>
+
+         
 
            <xpath expr="//field[@name='partner_id']" position="attributes">
              <attribute name="domain" >[('active_potenctiel','=','prospect'), ('customer','=',True), ('parent_id', '=', False)]</attribute>
@@ -980,15 +1003,21 @@
                 <xpath expr="//div[@class='oe_kanban_content']" position="inside">
                      <div>
                          <ul>
+                              <li>Besoin du prospect : <field name="type_besoin"/></li>
                              <li>type de prospect : <field name="type_propect"/></li></ul>
-                            <button  style="background-color:#F08080;border-radius:10px" attrs="{'invisible': [('active_potenctiels','=','prospect')]}"><field name="active_potenctiels"/></button> 
-                             <button  style="background-color:#F08080;border-radius:10px" attrs="{'invisible': [('active_potenctiels','=','prospect')]}"><field name="client_type"/></button> 
+                            
+                        
+                            <strong  style="background-color:#F08080;border-radius:10px" attrs="{'invisible': [('active_potenctiels','=','prospect')]}"><field name="active_potenctiels"/></strong> 
+                             <strong  style="background-color:#F08080;border-radius:10px" attrs="{'invisible': [('active_potenctiels','=','prospect')]}"><field name="client_type"/></strong> 
                      </div>
                 </xpath>
-
-
+                
+                 <xpath expr="//field[@name='name']"  position="attributes">
+                            <attribute name="String" >Identifiant</attribute>
+                </xpath>
             </field>
         </record>
+
 
 
 

@@ -16,10 +16,16 @@ class ContratVente(models.Model):
     _name = 'lb.contrat_vente'
     _rec_name = 'contrat_id'
     
+    contrat_id = fields.Char(string="Ref contrat", compute='_contrat_locataire_bien')
     
+   
+            
+            
     
     @api.multi
     def action_facture_vente(self):
+        for rec in self:
+            rec.state_f = 'invoiced'
         return {
             'name': _('sale_order'),
             'view_type': 'form',
@@ -29,11 +35,33 @@ class ContratVente(models.Model):
             'type': 'ir.actions.act_window',
         }
         
+        
+    contrat_count_vente = fields.Integer(string='facture', compute='get_contrat_count_facture')
+
+
+    def get_contrat_count_facture(self):
+        count = self.env['sale.order']
+        self.contrat_count_vente = count
+    
+        
+        
 
     date = fields.Date(string='Date', required=True,
                                 default=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
-    contrat_id = fields.Char(string="ref contrat")
+    
+    
+    name_locataire = fields.Char(string="name locataire", related='locataires.name')
+    
+    name_bien = fields.Char(string="name bien", related='bien_loue.name')
+    
+    @api.onchange('name_locataire','name_bien')
+    def _contrat_locataire_bien(self):
+        for r in self:
+            r.contrat_id = r.name_locataire + '/' + r.name_bien
+            
+            
+            
 
     _sql_constraints = [
         ('non_contrat_unique',
@@ -52,6 +80,13 @@ class ContratVente(models.Model):
     def _onchangebien(self):
         for r in self:
             r.product_id = r.bien_loue
+            
+            
+   
+    
+   
+    
+                        
                     
                     
 
@@ -71,15 +106,15 @@ class ContratVente(models.Model):
     civilite = fields.Selection([('m.', 'Monsieur'), ('mme', 'Madame'), ('mlle', 'Mademoiselle'), ('m. et mme', 'M. et Mme')],
                                 string="Civilité", related='bailleur.civilite')
 
-    nbre_tour = fields.Integer(string="niveau", related='bien_loue.nbre_tour')
+    nbre_tour = fields.Integer(string="Niveau", related='bien_loue.nbre_tour')
 
-    type_bien = fields.Many2one(related='bien_loue.type_id', string="Type Bien")
+    type_bien = fields.Many2one(related='bien_loue.type_id', string="Type de bien")
 
-    categ_id = fields.Many2one(related='bien_loue.categ_id', string="Type Bien")
+    categ_id = fields.Many2one(related='bien_loue.categ_id', string="Catégorie bien")
 
-    adresse = fields.Many2one(related='bien_loue.adresse', string="adresse Bien")
+    adresse = fields.Many2one(related='bien_loue.adresse', string="Adresse du bien")
 
-    ville = fields.Many2one(related='bien_loue.ville', string="ville Bien")
+    ville = fields.Many2one(related='bien_loue.ville', string="Ville")
     rue = fields.Char(related='bien_loue.rue',string="Rue")
 
     chambres = fields.Float(related='bien_loue.chambres')
@@ -116,7 +151,7 @@ class ContratVente(models.Model):
             
     locataires = fields.Many2one('res.partner', ondelete='cascade', string="Acheteur")
     mobile = fields.Char(string="N° Tel Acheteur", related='locataires.phone')
-    adresse_locataire = fields.Char(string="Adresse Acheteur",
+    adresse_locataire = fields.Char(string="Adresse acheteur",
                                     related='locataires.street')
 
     title = fields.Many2one(related='locataires.title')
@@ -125,12 +160,12 @@ class ContratVente(models.Model):
 
 
     #
-    loyer_sans_charges = fields.Float(string="Prix de Vente en fcfa", related='bien_loue.list_price', default=0.0,
+    loyer_sans_charges = fields.Float(string="Prix de vente en fcfa", related='bien_loue.list_price', default=0.0,
                                       digits=dp.get_precision('Prix de Vente hors charges'))
     frais_retard = fields.Float(string='Frais de retard (%)', default=0.0,
                                 digits=dp.get_precision('Frais de retard (%)'))
     autre_paiement = fields.Float(string='Autre Paiements', digits=dp.get_precision('Autre Paiements'))
-    description_autre_paiement = fields.Text(string="Autre Paiements : Description")
+    description_autre_paiement = fields.Text(string="Autre paiements : Description")
     enregistrement_paiement = fields.One2many('lb.paiement', 'paiement_id', string="Paiements")
     condition_particuliere = fields.Text(string="Conditions")
     reste_a_payer = fields.Float(string="Reste à payer", default=0.0, digits=dp.get_precision('Reste à Payer'))
@@ -148,6 +183,10 @@ class ContratVente(models.Model):
         ('draft', 'New Contrat'),
         ('confirm', 'Contrat Bien Vendu'),
     ], string='Status', readonly=True, default='confirm')
+    
+    
+    state_f = fields.Selection([("settled", "A Facturer"),
+                   ("invoiced", "Facturé")], string="Etat facture", readonly=True, default="settled")
 
     def action_confirm(self):
         for rec in self:
@@ -218,7 +257,7 @@ class ContratVente(models.Model):
     mobile = fields.Char(string="Mobile acheteur", related='courtier.mobile')
 
     active_commision = fields.Boolean('active_courtier vente', default=False)
-    commision_courtier = fields.Float(string="Commision Courtier", default=0.0, compute='_commissioncourtier')
+    commision_courtier = fields.Float(string="Commision courtier", default=0.0, compute='_commissioncourtier')
 
     @api.onchange('prixlocation_id','active_commision','taux_commission_courtier')
     def _commissioncourtier(self):

@@ -3,32 +3,32 @@
     <data>
         <!-- Locations form view -->
         <record model="ir.ui.view" id="location_form_view">
-            <field name="name">location.form</field>
+            <field name="name">contrat.form</field>
             <field name="model">lb.location</field>
             <field name="arch" type="xml">
                 <form string="Location Form">
                 <header>
-                    <button name="action_confirm" type="object" string="En Location" class="oe_highlight" states="draft"/>
-                    <button name="action_done" type="object" string="Clos Contrat" class="oe_highlight"
+                    <button name="action_confirm" type="object" string="En location" class="oe_highlight" states="draft"/>
+                    <button name="action_done" type="object" string="Clos contrat" class="oe_highlight"
                             attrs="{'invisible': [('state','!=', 'confirm')]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,ferme" />
                 </header>
                     <sheet>
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
-                        <button name="print_report" icon="fa-arrow-down"  type="object" string="impression  contrat" attrs="{'invisible': [('state','!=', 'confirm')]}" class="oe_stat_button" style="color:#000080"/>
+                        <button name="print_report" icon="fa-arrow-down"  type="object" string="Impression contrat" attrs="{'invisible': [('state','!=', 'confirm')]}" class="oe_stat_button" style="color:#000080"/>
 
                         
-                    <button name="new_contrat" type="object" string="New Contrat" class="oe_stat_button" context="{'default_bien_loue': context.get('bien_loue', False)}" attrs="{'invisible': [('state','=', 'confirm')]}" />
+                    <button name="new_contrat" type="object" string="New contrat" class="oe_stat_button" context="{'default_bien_loue': context.get('bien_loue', False)}" attrs="{'invisible': [('state','=', 'confirm')]}" />
                        
 
-                        <button name="print_report_close" type="object" icon="fa-arrow-down" string="impression contrat" attrs="{'invisible': [('state','=', 'confirm')]}" class="oe_stat_button" style="color:#000080"/>
+                        <button name="print_report_close" type="object" icon="fa-arrow-down" string="Impression contrat" attrs="{'invisible': [('state','=', 'confirm')]}" class="oe_stat_button" style="color:#000080"/>
 
                         <button class="oe_stat_button" name="attachment_tree_view" type="object" icon="fa-files-o">
                             <field string="Document suplépentaire" name="doc_count" widget="statinfo"/>
                         </button>
 
                          <button name="open_etat_contrat" class="oe_stat_button" type="object" icon="fa-legal" context="{'default_location': active_id}">
-                            <field string="Etat_lieu" name="etat_count" widget="statinfo"/>
+                            <field string="Etat lieu" name="etat_count" widget="statinfo"/>
                         </button>
                     </div>
 
@@ -40,7 +40,7 @@
                              
                          </group>
                          <group>
-                              <field name="bien_loue" domain="[('type','=','service'), ('etat_bien','=','ferme')]"/>
+                              <field name="bien_loue" domain="[('type','=','service')]"/>
                              <field name="etat_bien"/>
                              
                               <field name="prixlocation_id" widget='monetary'/>
@@ -67,14 +67,14 @@
                               <field name="payement_avance" widget='monetary'/>
                              <field name="caution_returne" widget='monetary' attrs="{'invisible': [('state','!=', 'confirm')]}" />
                          </group>
-                         <group string="Fin Contrat">
-                             <field name="depot_retourne" readonly="1"/><br></br>
+                         <group string="Fin contrat" attrs="{'invisible': [('state','=', 'confirm')]}">
+                             <field name="depot_retourne" readonly="1" attrs="{'invisible': [('state','=', 'confirm')]}"/><br></br>
                              <field name="maintenance" attrs="{'invisible': [('state','=', 'confirm')]}" />
                              <field name="date_returne" attrs="{'invisible': [('state','=', 'confirm')]}" />
                              <field name="caution_returne" widget='monetary' attrs="{'invisible': [('state','=', 'confirm')]}" />
                          </group>
                        </group>
-                         <group string="commision">
+                         <group string="Commision">
                          <group>
                              <field name="active_commision"/>
                              <field name="courtier" attrs="{'invisible':[('active_commision','=',False)]}"/>
@@ -85,7 +85,7 @@
                              <field name="commision_agence" widget='monetary'/><br></br>
                          </group>
                        </group>
-                       <group string="Informations Contrat">
+                       <group string="Informations contrat">
                          <group>
                              <field name="date_debut"/>
                              <field name="duration" invisible="1"/>
@@ -220,14 +220,14 @@
                                 </div>
                                 <div t-attf-class="oe_kanban_content">
                                    <ul>
-                                       <li> Nom Contrat : <field name="contrat_id"/></li>
-                                       <li>Type Bien : <field name="categ_id"></field> </li>
-                                    <li style="color:#8B0000" >Bien Loué : <field name="bien_loue"/></li>
-                                    <li>prix_location : <field name="loyer_sans_charges"/></li>
-                                    <li>Date Debut : <field name="date_debut"/></li>
-                                    <li>Dat Expiration : <field name="date_expiration"/></li>
+                                       <li>Nom contrat : <field name="contrat_id"/></li>
+                                       <li>Type du bien : <field name="categ_id"></field> </li>
+                                    <li style="color:#8B0000" >Non du Bien: <field name="bien_loue"/></li>
+                                    <li>Prix de location : <field name="loyer_sans_charges"/></li>
+                                    <li>Date debut : <field name="date_debut"/></li>
+                                    <li>Date expiration : <field name="date_expiration"/></li>
                                     <li>Locataire : <field name="locataires"/></li>
-                                    <li>N° Tel Locataire : <field name="mobile"/></li>
+                                    <li>N° lel locataire : <field name="mobile"/></li>
                                 </ul>
                                 <ul>
                                      <button style="background-color:#00FFFF;border-radius: 10px" class="btn btn-secondary" attrs="{'invisible': [('state','!=', 'confirm')]}" ><field name="state" style="font-size:15px;color:#8B0000"/></button>
@@ -252,7 +252,7 @@
                 <field name="bailleur" invisible="1"/>
                 <field name="locataires"/>
                 <separator />
-                <filter string="En Location" name="confirm" domain="[('state', '=', 'confirm')]"/>
+                <filter string="En location" name="confirm" domain="[('state', '=', 'confirm')]"/>
                 <filter string="Disponble" name="ferme" domain="[('state', '=', 'ferme')]"/>
                 <group expand="0" name="group_by" string="Group By">
                        <filter name="group_company" string="Etat" context="{'group_by': 'state'}"/>
@@ -263,20 +263,20 @@
 
 
         <record model="ir.actions.act_window" id="location_list_action">
-            <field name="name">Locations</field>
+            <field name="name">Contrats de location</field>
             <field name="res_model">lb.location</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{'group_by': 'state'}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Créer une nouvelle location
+                    Contrats de location
                 </p>
             </field>
         </record>
 
          
-        <menuitem id="location_menu_menu" name="Contrat de Location"
+        <menuitem id="location_menu_menu" name="Contrats de location"
                  parent="rental_app_menu"
                   action="location_list_action" sequence="2"/>
 
@@ -313,7 +313,7 @@
                     <page string="Facturation"  groups="account.group_account_user">
                         <group string="Écritures comptables">
                            
-                            <group string="compte courtier location" name="payables">
+                            <group string="Compte courtier location" name="payables">
                                <field name="property_account_payable_id"/>
                             </group>
                              <group>
@@ -336,7 +336,7 @@
             <field name="name">lb.courtier.tree</field>
             <field name="model">lb.courtier</field>
             <field name="arch" type="xml">
-                <tree string="courtiers">
+                <tree string="Courtiers">
                     <field name="nom_courtier"/>
                 </tree>
             </field>
@@ -345,13 +345,13 @@
 
 
          <record model="ir.actions.act_window" id="courtier_list_action">
-            <field name="name">Courtier</field>
+            <field name="name">Courtiers</field>
             <field name="res_model">lb.courtier</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Créer une nouvelle Courtier
+                    Courtiers
                 </p>
             </field>
         </record>

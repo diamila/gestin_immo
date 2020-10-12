@@ -37,6 +37,7 @@ Module pour la gestion Immobiliére
         'reports/contrat_bailleur.xml',
         'reports/contrat_vente_templete.xml',
         'reports/report_facture_location.xml',
+        'reports/report_settlement_templates_inherit.xml',
         'wizard/create_locataire.xml',
         'wizard_maintenance/create_maintenance.xml',
         'views/locataire_p.xml',
@@ -45,7 +46,8 @@ Module pour la gestion Immobiliére
         'security/security.xml',
         'views/contrat_vente.xml',
         'views/facture_location.xml',
-
+        'demo/demo.xml',
+        'data/sequence.xml',
 
     ],
     # only loaded in demonstration mode

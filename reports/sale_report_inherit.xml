@@ -14,10 +14,10 @@
                             <p class="m-0" t-field="o.name"/>
                         </div>
                         <div class="col-auto mw-100 mb-2" t-if="o.date_invoice" name="invoice_date">
-                            <strong>Invoice Date:</strong>
+                            <strong>Date de facturation:</strong>
                             <p class="m-0" t-field="o.date_invoice"/>
                         </div>
-                        <div class="col-auto mw-100 mb-2" t-if="o.date_due and o.type == 'out_invoice' and o.type_bien != 'service' and o.state in ('open', 'in_payment', 'paid')" name="due_date">
+                        <div class="col-auto mw-100 mb-2" t-if="o.date_due and o.type == 'out_invoice' and o.state in ('open', 'in_payment', 'paid')" name="due_date">
                             <strong>Due Date:</strong>
                             <p class="m-0" t-field="o.date_due"/>
                         </div>
@@ -29,10 +29,11 @@
                             <strong>Customer Code:</strong>
                             <p class="m-0" t-field="o.partner_id.ref"/>
                         </div>
+                        <!--
                         <div name="reference" class="col-auto mw-100 mb-2" t-if="o.reference and o.type_bien != 'service'">
                             <strong>Reference:</strong>
                             <p class="m-0" t-field="o.reference"/>
-                        </div>
+                        </div>-->
                         
                         <br/>
                         
@@ -41,24 +42,15 @@
                              <p class="m-0" t-field="o.type_bien"/>
                          </div>
                          
-                         <div class="col-auto mw-100 mb-2" t-if="o.type_bien == 'service' and o.paiement">
-                          <strong>paiement durée:</strong>
-                             <p class="m-0" t-field="o.paiement"/>
-                         </div>
-                         
+                      
                          
 
-                         <div class="col-auto mw-100 mb-2" t-if="o.mois_payee_c and o.type_bien == 'service' and o.paiement == 'mensuel'">
+                         <div class="col-auto mw-100 mb-2" t-if="o.mois_payee_c and o.type_bien == 'service'">
                           <strong>mois loyer:</strong>
                              <p class="m-0" t-field="o.mois_payee_c"/>
                          </div>
                          
                          
-                         <div class="col-auto mw-100 mb-2" t-if="o.paiement != 'mensuel' and o.type_bien == 'service'and o.mois_commencant">
-                          <strong>mois commençant:</strong>
-                             <p class="m-0" t-field="o.mois_commencant"/>
-                         </div>
-
                         
                     
                  </div>
@@ -73,7 +65,7 @@
                                 <th class="text-left"><span>Description</span></th>
                                 <th class="d-none text-left"><span>Source Document</span></th>
                                
-                                <th t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Prix Vente</span></th>
+                                <th t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Prix</span></th>
                                 <th t-if="display_discount" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                     <span>Disc.(%)</span>
                                     <!-- TODO: remove in master -->

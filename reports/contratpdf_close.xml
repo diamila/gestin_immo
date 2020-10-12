@@ -25,7 +25,7 @@
                                          <br/>
                                          <br/>
 
-                                         <h2>CONTRAT DE LOCATION POUR UN <div t-field="o.categ_id"></div> </h2>
+                                         <!--<h2>CONTRAT DE LOCATION POUR UN <div t-field="o.categ_id"></div> </h2>-->
                                          <br/>
 
                                              <p style="text-align:center;">

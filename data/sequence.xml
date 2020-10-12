@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+    <!--Adding New Sequence For A Field-->
+    <!--  https://www.youtube.com/watch?v=ZfKzmfiqeg0&list=PLqRRLx0cl0hoJhjFWkFYowveq2Zn55dhM&index=8  -->
+    
+        <!-- Sequences for hospital.patient -->
+        <record id="seq_bien" model="ir.sequence">
+            <field name="name">Bien Sequence</field>
+            <field name="code">bien.sequence</field>
+            <field name="prefix"></field>
+            <field name="padding">7</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+       
+    </data>
+</odoo>

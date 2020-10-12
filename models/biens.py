@@ -17,12 +17,34 @@ class BienNormal(models.Model):
     def _get_default_country(self):
         country = self.env['res.country'].search([('code', '=', 'MA')], limit=1)
         return country
+        
+    ref = fields.Char(string="ref", default="00125")
+    
+    #name_a = fields.Char(string="ref", default="aaaaa")
+    
+    #name = fields.Char(string="name_n", compute='_fname')
+    
+    
+    name_seq = fields.Char(string='seq', required=True, copy=False, readonly=True,
+                           index=True, default=lambda self: _('New'))
+                           
+    @api.model
+    def create(self, vals):
+        if vals.get('name_seq', _('New')) == _('New'):
+            vals['name_seq'] = self.env['ir.sequence'].next_by_code('bien.sequence') or _('New')
+        result = super(BienNormal, self).create(vals)
+        return result 
+        
+        
+    
+        
+    
 
     latitude = fields.Char(string="Latitude", default="0.0")
     longitude = fields.Char(string="Longitude", default="0.0")
     Date = fields.Date()
-    nbre_tour = fields.Integer(string="niveau")
-    ameublement = fields.Char(string="ameublement")
+    nbre_tour = fields.Integer(string="Niveau")
+    ameublement = fields.Char(string="Ameublement")
     
     
     lst_price = fields.Float(related='list_price', readonly=False,
@@ -30,7 +52,7 @@ class BienNormal(models.Model):
     
     
     property_account_income_categ_id= fields.Many2one('account.account', company_dependent=True,
-        string="Income Account", oldname="property_account_income",
+        string="Income account", oldname="property_account_income",
         domain=[('deprecated', '=', False)],
         help="Keep this field empty to use the default value from the product category.", related='categ_id.property_account_income_categ_id')
         
@@ -46,19 +68,14 @@ class BienNormal(models.Model):
 
     type = fields.Selection([
         ('consu', 'bien à vendre'),
-        ('service', 'Bien à loué')], string='Product Type', default='consu', required=True,
+        ('service', 'Bien à loué')], string='Type de bien', default='consu', required=True,
         help='A storable product is a product for which you manage stock. The Inventory app has to be installed.\n'
              'A consumable product is a product for which stock is not managed.\n'
              'A service is a non-material product you provide.')
 
    
 
-    taxes_id = fields.Many2many('account.tax', 'product_taxes_rel', 'prod_id', 'tax_id',
-                                help="Default taxes used when selling the product.", string='Customer Taxes',
-                                domain=[('type_tax_use', '=', 'sale')],
-                                default=lambda self: self.env.user.company_id.account_sale_tax_id)
-
-
+    
 
 
     #contrat = fields.Many2one('lb.location', ondelete='cascade', string="Contrat lié au bien")
@@ -69,7 +86,7 @@ class BienNormal(models.Model):
     location_ok = fields.Boolean(
         'Peut étre en location', default=True)
 
-    type_id = fields.Many2one('lb.type', ondelete='cascade', string="Type Biens")
+    type_id = fields.Many2one('lb.type', ondelete='cascade', string="Type bien")
     gestionnaire_id = fields.Many2one('lb.gestionnaire', ondelete='cascade', string="gestionnaire Immeuble", store=True)
     
     
@@ -77,7 +94,7 @@ class BienNormal(models.Model):
     bailleur_id = fields.Many2one('lb.bailleur', string="Bailleur")
     
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
-        string="compte bailleur", oldname="property_account_payable",
+        string="Compte bailleur", oldname="property_account_payable",
         domain="[('internal_type', '=', 'payable'), ('deprecated', '=', False)]",
         help="This account will be used instead of the default one as the payable account for the current partner",
         related='bailleur_id.property_account_payable_id')
@@ -85,7 +102,7 @@ class BienNormal(models.Model):
 
 
 
-    taux_commission = fields.Float('taux de commission de l agence SDG(%)', default=0)
+    taux_commission = fields.Float('Taux de commission de l agence SDG(%)', default=0)
 
     commision_agence = fields.Float(string="Commision agence", default=5, compute='_commissionagence')
 
@@ -108,18 +125,18 @@ class BienNormal(models.Model):
 
 
 
-    chambres = fields.Float(string="Nombre Chambres", default=0)
-    salons = fields.Float(string="Nbre Salons", default=0)
-    cuisines = fields.Float(string="Nbre Cuisines", default=0)
-    toilette = fields.Float(string="Nbre Toilettes", default=0)
-    cour = fields.Float(string="espace familiale", default=0)
+    chambres = fields.Float(string="Nombre chambres", default=1)
+    salons = fields.Float(string="Nombre salons", default=1)
+    cuisines = fields.Float(string="Nombre cuisines", default=1)
+    toilette = fields.Float(string="Nombre toilettes", default=1)
+    cour = fields.Float(string="Espace familiale", default=1)
 
-    salles_bain = fields.Char(string="Nbre Salles De Bain")
-    parking = fields.Char(string="Nbre Parking")
-    balcon = fields.Char(string="Nbre balcon")
+    salles_bain = fields.Char(string="Nombre salles de bains")
+    parking = fields.Char(string="Nombre parkings")
+    balcon = fields.Char(string="Nombre balcons")
     jardin = fields.Boolean(default=False, string="Jardin")
-    ascenseur = fields.Boolean(default=False, string="ascenseur")
-    g_electroge = fields.Boolean(default=False, string="Groupe Electrogène")
+    ascenseur = fields.Boolean(default=False, string="Ascenseur")
+    g_electroge = fields.Boolean(default=False, string="Groupe electrogène")
 
 
     oriente_vers = fields.Char(string="Position", default='Bordure route principale')
@@ -128,9 +145,9 @@ class BienNormal(models.Model):
 
     rue = fields.Char(string="Rue")
 
-    adresse = fields.Many2one('lb.quartier', string="quartier")
+    adresse = fields.Many2one('lb.quartier', string="Quartier", required=True)
 
-    ville = fields.Many2one('lb.ville')
+    ville = fields.Many2one('lb.ville', string="Ville")
 
     pays = fields.Many2one('res.country', string="Pays", default=_get_default_country)
 
@@ -190,14 +207,14 @@ class BienNormal(models.Model):
         }
 
     # champs: lien avec les information du bien
-    history_ids = fields.Many2many('lb.history', string="history")
-    plus_proche_ids = fields.Many2many('lb.lieu', string="lieu plus proche")
-    sous_propriete_ids = fields.Many2many('lb.sous_propriete', string="détail piéce")
+    history_ids = fields.Many2many('lb.history', string="History")
+    plus_proche_ids = fields.Many2many('lb.lieu', string="Lieux plus proche")
+    sous_propriete_ids = fields.Many2many('lb.sous_propriete', string="Détail des pièces")
 
     # champs: Plans d'étage, photos et documents
-    plan_ids = fields.Many2many('lb.plan_etage', string="plan")
-    photos_ids = fields.Many2many('lb.photos', string="photos")
-    documents_ids = fields.Many2many('lb.documents', string="documents")
+    plan_ids = fields.Many2many('lb.plan_etage', string="Plans")
+    photos_ids = fields.Many2many('lb.photos', string="Photos")
+    documents_ids = fields.Many2many('lb.documents', string="Documents")
 
    # @api.multi
     #def get_name(self):
@@ -230,7 +247,7 @@ class BienNormal(models.Model):
         
         
     
-    contrat_count_vente = fields.Integer(string='Contrats vente', compute='get_contrat_count_vente')
+    contrat_count_vente = fields.Integer(string='Contrats de vente', compute='get_contrat_count_vente')
 
     @api.multi
     def open_bien_contrat_vente(self):
@@ -251,7 +268,7 @@ class BienNormal(models.Model):
         
     # états/barre LOCATION
     state_vente = fields.Selection([
-        ('draft', 'bien dispo'),
+        ('draft', 'ien disponible'),
         ('confirm', 'Bien Vendu'),
     ], compute='_onchangeEtat_vente')
 
@@ -348,7 +365,7 @@ class gestionnaire(models.Model):
     _name = 'lb.gestionnaire'
     _rec_name = 'gestionnaire_immeuble'
 
-    gestionnaire_immeuble = fields.Char(string="Nom gestionnaire Immeuble")
+    gestionnaire_immeuble = fields.Char(string="Nom gestionnaire immeuble")
 
 
 
@@ -359,8 +376,15 @@ class history(models.Model):
     _rec_name = 'source'
 
     date = fields.Date('Date')
-    source = fields.Char('source')
+    source = fields.Char('Source')
     number = fields.Char('Number')
+
+class type_lieu(models.Model):
+    _name = 'lb.type_lieu'
+    _rec_name = 'type_lieu'
+    
+  
+    type_lieu = fields.Char('Type de lieu')    
 
 
 class plus_proche(models.Model):
@@ -368,44 +392,53 @@ class plus_proche(models.Model):
     _rec_name = 'name_lieu'
 
 
-    name_lieu = fields.Char('nom du lieu')
-    type_lieu = fields.Selection([('restaurant', 'Restaurant'), ('hotel', 'Hotel'), ('marche', 'Marché'), ('plage', 'Plage'), ('mosque','Mosqué'), ('loisirs', 'Espace de loisirs')])
-    distance = fields.Float(string="Latitude", default=0.0)
+    name_lieu = fields.Char('Nom du lieu')
+    type_lieu = fields.Many2one('lb.type_lieu', string="Type de lieu")
+    distance = fields.Float(string="Distance(m)", default=5)
+    
+    
 
 class sous_propriete(models.Model):
     _name = 'lb.sous_propriete'
-    _rec_name = 'type_chambre'
+    _rec_name = 'type_piece'
 
 
-    type_chambre = fields.Selection([('salon', 'Salon'), ('chambre_parent', 'Chambre Parent'), ('chambre_enfant', 'Chambre Enfant'), ('chambre_visiteur', 'Chambre Visiteur'), ('cuisine', 'Cuisine'), ('toilette', 'Toilette'), ('cour', 'espace familiale')], string="type piéce")
-    height = fields.Float(string="height(m)", default=0.0)
-    width = fields.Float(string="width(m)", default=0.0)
-
-
+    type_piece = fields.Many2one('lb.type_piece', string="Type de pièces")
+    height = fields.Float(string="longueur(m)", default=3.0)
+    width = fields.Float(string="Largeur(m)", default=2.0)
+    
+    
+class type_piece(models.Model):
+    _name = 'lb.type_piece'
+    _rec_name = 'type_piece'
+    
+  
+    type_piece = fields.Char('Type de pièces')
+   
 
 class Plans_etage(models.Model):
     _name = 'lb.plan_etage'
     _rec_name = 'description_plan'
 
 
-    description_plan = fields.Char('description plan')
-    photos_plan = fields.Binary(string="photos plan", attachment=True)
+    description_plan = fields.Char('Description plan')
+    photos_plan = fields.Binary(string="Photos plan", attachment=True)
 
 class photos(models.Model):
     _name = 'lb.photos'
     _rec_name = 'description'
 
-    description = fields.Char('description')
-    photos = fields.Binary(string="photos", attachment=True)
+    description = fields.Char('Description')
+    photos = fields.Binary(string="Photos", attachment=True)
 
 
 class documents(models.Model):
     _name = 'lb.documents'
     _rec_name = 'description'
 
-    description = fields.Char('description')
-    date_expiration = fields.Date('date expiration')
-    fichier = fields.Binary(string="fichier", attachment=True)
+    description = fields.Char('Description')
+    date_expiration = fields.Date('Date expiration')
+    fichier = fields.Binary(string="Fichiers", attachment=True)
 
 
 
@@ -414,30 +447,32 @@ class Maintenance(models.Model):
     _inherit = 'maintenance.request'
 
     cout_maintenance = fields.Float(string="coût maintenance", default=0.0)
-    bien_loue = fields.Many2one('product.product', required=True)
+    bien_loue = fields.Many2one('product.product', required=True, String="Bien")
 
 
 
 
 class CRM(models.Model):
     _inherit = 'crm.lead'
+    
+    
 
-    type_propect = fields.Selection([('location', 'Location'), ('gerance', 'Gérance'), ('location', 'Location + Gérance')])
+    type_propect = fields.Selection([('location', 'Location'), ('gerance', 'Gérance'), ('location', 'Location + Gérance')], String="Type de Prospect")
 
     besoin = fields.Selection(
         [('location', 'Location'), ('ach', 'Achat')],
-        string="Besoin Du Prospect", related='partner_id.besoin')
+        string="Type Besoin", related='partner_id.besoin')
 
     #info = fields.Char(default="veiller enregistre les modification pr que Ce prospect soit un locataire")
 
     active_potenctiels = fields.Selection(
         [('client', 'est un Client'), ('prospect', 'Est Un Prospect')],
-        string="statut client", related='partner_id.active_potenctiel', default='prospect')
+        string="Statut contact", related='partner_id.active_potenctiel', default='prospect')
     #test = fields.Boolean(compute='create_locataire')
 
     client_type = fields.Selection(
         [('client_ache', 'Client Acheteur'), ('client_loc', 'Client Locataire')],
-        string="statut client", related='partner_id.client_type', default='client_loc')
+        string="Statut client", related='partner_id.client_type', default='client_loc')
 
     @api.one
     def terminer_basculer(self):
@@ -488,3 +523,8 @@ class CRM(models.Model):
 
 
 
+
+class CRM_suite(models.Model):
+    _inherit = 'crm.lead'
+    
+    type_besoin = fields.Char(string="Besoin du prospect")

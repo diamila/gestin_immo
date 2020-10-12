@@ -23,36 +23,49 @@ class Paiement_location(models.Model):
     _rec_name = 'product_id'
     
     
-    invoice_count = fields.Integer(string='Invoice Count', compute='_get_invoiced', readonly=True)
     
-    def _get_invoiced(self):
-        count = self.env['sale.order'].search_count([]) 
-        self.invoice_count = count
+          
     
-   
         
-    @api.multi
-    def action_view_sale_facture(self):
-        return {
-            'name': _('sale_order'),
-            'view_type': 'form',
-            'res_model': 'sale.order',
-            'view_id': False,
-            'view_mode': 'form',
-            'type': 'ir.actions.act_window',
-        }
-        
-        
-    contrat_id =fields.Many2one('lb.location', string="contrat",  related='invoice_line_ids.product_id')  
-                
-                
+    
     @api.multi
     def action_view_invoice(self):
         action = self.env.ref('account.action_invoice_tree1').read()[0]
         form_view = [(self.env.ref('account.invoice_form').id, 'form')]
         return action
+        
+    contrat =fields.Many2one('lb.location', string="Contrat",  related='invoice_line_ids.product_id')      
+    
+    
+    invoice_count = fields.Integer(string='Invoice Count', compute='_get_invoiced')
+    
+    def _get_invoiced(self):
+        count = self.env['sale.order'].search_count([('contrat', '=', self.id)])
+        self.invoice_count = count
+    
+   
+  
+        
+    @api.multi
+    def action_facture(self):
+        return {
+            'name': _('sale_order'),
+            'domain': [('contrat', '=', self.id)],
+            'view_type': 'form',
+            'res_model': 'sale.order',
+            'view_id': False,
+            'view_mode': 'tree,form',
+            'type': 'ir.actions.act_window',
+        }
+        
+        
+            
+        
+        
+   
                 
-     
+                
+   
      
    
  
@@ -77,14 +90,14 @@ class Paiement_location(models.Model):
     #bien_loue = fields.Many2one(related='invoice_line_ids.bien_loue', string="bien")
    
     
-    locataire_id = fields.Many2one(related='invoice_line_ids.locataire_id', string="locataire")
+    locataire_id = fields.Many2one(related='invoice_line_ids.locataire_id', string="Locataire")
     
-    partner_id = fields.Many2one(related='invoice_line_ids.partner_id', string="locataire")
+    partner_id = fields.Many2one(related='invoice_line_ids.partner_id', string="Locataire")
     
-    mobile = fields.Char(string="N° Tel Locataire", related='invoice_line_ids.mobile')
+    mobile = fields.Char(string="N° tel locataire", related='invoice_line_ids.mobile')
     
     
-    categ_id = fields.Many2one(related='invoice_line_ids.categ_id', string="Type Bien")
+    categ_id = fields.Many2one(related='invoice_line_ids.categ_id', string="catégorie du bien")
     
     
     objet_paiement = fields.Selection([('avance', 'Avance'),('loyer', 'Loyer du mois'),('autre paiements', 'Autres Paiements')]
@@ -123,7 +136,7 @@ class Paiement_location(models.Model):
                                    ('octobre', 'octobre'),
                                    ('novembre', 'novembre'),
                                    ('decembre', 'décembre')],
-                                  string="mois commençant", related='invoice_line_ids.mois_commencant', attrs="{'invisible':[('paiement','=','mensuel')]}")
+                                  string="Mois commençant", related='invoice_line_ids.mois_commencant', attrs="{'invisible':[('paiement','=','mensuel')]}")
     
     bailleur_id = fields.Many2one(related='invoice_line_ids.bailleur_id', string="Bailleur")
     
@@ -131,13 +144,13 @@ class Paiement_location(models.Model):
     commision_bailleur = fields.Float(string="Commision bailleur", default=5, related='invoice_line_ids.commision_bailleur')
     
     
-    price_unit = fields.Float(related='invoice_line_ids.price_unit', string="montant payé sans taxe")
+    price_unit = fields.Float(related='invoice_line_ids.price_unit', string="Prix total")
     
-    montant_location = fields.Float(related='invoice_line_ids.montant_location', string="prix loyer/mois(sans taxe)")
+    montant_location = fields.Float(related='invoice_line_ids.montant_location', string="Prix loyer/mois(sans taxe)")
     
-    montant_paye = fields.Float(related='invoice_line_ids.montant_paye', string="montant")
+    montant_paye = fields.Float(related='invoice_line_ids.montant_paye', string="Montant")
     
-    amount_untaxed = fields.Float(related='invoice_line_ids.montant_paye', string="montant")
+    amount_untaxed = fields.Float(related='invoice_line_ids.price_unit', string="Montant")
     
 
     
@@ -178,9 +191,9 @@ class facturation_(models.Model):
     
     
     
-    product_id =fields.Many2one('lb.location', string="contrat",  domain="[('state','=','confirm')]")
+    product_id =fields.Many2one('lb.location', string="Contrat associé",  domain="[('state','=','confirm')]")
     
-    bien_loue = fields.Many2one(related='product_id.bien_loue', string="bien")
+    bien_loue = fields.Many2one(related='product_id.bien_loue', string="Bien")
     
     # états/barre LOCATION
     state = fields.Selection([
@@ -189,11 +202,11 @@ class facturation_(models.Model):
         ('ferme', 'Contrat Achevé'),
     ], string='Status', related='product_id.state')   
     
-    categ_id = fields.Many2one(related='product_id.categ_id', string="Type Bien")
+    categ_id = fields.Many2one(related='product_id.categ_id', string="Catégorie du bien")
     
     type = fields.Selection([
         ('consu', 'bien à vendre'),
-        ('service', 'Bien à loué')], string='Product Type', default='service', required=True,
+        ('service', 'Bien à loué')], string='Type de bien', default='service', required=True,
         help='A storable product is a product for which you manage stock. The Inventory app has to be installed.\n'
              'A consumable product is a product for which stock is not managed.\n'
              'A service is a non-material product you provide.',related='product_id.type')
@@ -236,7 +249,7 @@ class facturation_(models.Model):
                                    ('octobre', 'octobre'),
                                    ('novembre', 'novembre'),
                                    ('decembre', 'décembre')],
-                                  string="paiement du mois", attrs="{'invisible':[('paiement','!=','mensuel')]}")
+                                  string="Paiement du mois", attrs="{'invisible':[('paiement','!=','mensuel')]}")
     
     
     mois_commencant = fields.Selection([('janvier', 'janvier'),
@@ -251,23 +264,23 @@ class facturation_(models.Model):
                                    ('octobre', 'octobre'),
                                    ('novembre', 'novembre'),
                                    ('decembre', 'décembre')],
-                                  string="mois_commençant", attrs="{'invisible':[('paiement','=','mensuel')]}")
+                                  string="Mois commençant", attrs="{'invisible':[('paiement','=','mensuel')]}")
                                   
     
    
     
-    montant_location = fields.Float(related='product_id.loyer_sans_charges', string="prix loyer/mois")
+    montant_location = fields.Float(related='product_id.loyer_sans_charges', string="Prix loyer/mois")
      
    
     
-    montant_paye = fields.Float(compute='_montant_paye', string="montant payé")
+    montant_paye = fields.Float(compute='_montant_paye', string="Montant payé")
     
-    price_unit = fields.Float(string="prix total", compute='_amount_total')
+    price_unit = fields.Float(string="Prix total", compute='_amount_total')
 
-    @api.onchange('montant_paye')
+    @api.onchange('montant_location')
     def _amount_total(self):
         for r in self:
-            r.price_unit = (r.montant_paye)
+            r.price_unit = (r.montant_location)
             
             
    
@@ -313,4 +326,4 @@ class facturation_(models.Model):
    
     
     
-    paiement_id = fields.Many2one('lb.paiement_location', ondelete='cascade', string="paiement Location")
+    paiement_id = fields.Many2one('lb.paiement_location', ondelete='cascade', string="Paiement location")

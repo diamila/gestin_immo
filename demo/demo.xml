@@ -26,5 +26,130 @@
         <!--     <field name="value">40</field> -->
         <!--   </record> -->
         <!--  -->
+        
+        
+        
+         
+        
+
+        <record model="lb.type_piece" id="c1">
+            <field name="type_piece">Salon</field>
+            <!-- no description for this one -->
+        </record>
+        <record model="lb.type_piece" id="c2">
+            <field name="type_piece">Chambre Parent</field>
+        </record>
+
+        <record model="lb.type_piece" id="c3">
+            <field name="type_piece">Chambre Enfant</field>
+            <!-- no description for this one -->
+        </record>
+        <record model="lb.type_piece" id="c4">
+            <field name="type_piece">Chambre visiteur</field>
+        </record>
+
+        <record model="lb.type_piece" id="c5">
+            <field name="type_piece">Cuisine</field>
+            <!-- no description for this one -->
+        </record>
+        <record model="lb.type_piece" id="c6">
+            <field name="type_piece">Toilette</field>
+        </record>
+        
+        
+        
+        
+       
+       
+       
+ 
+        <record model="lb.type_lieu" id="l1">
+            <field name="type_lieu">Restaurant</field>
+            <!-- no description for this one -->
+        </record>
+        <record model="lb.type_lieu" id="l2">
+            <field name="type_lieu">Hotel</field>
+        </record>
+
+        <record model="lb.type_lieu" id="l3">
+            <field name="type_lieu">Marché</field>
+            <!-- no description for this one -->
+        </record>
+        <record model="lb.type_lieu" id="l4">
+            <field name="type_lieu">Plage</field>
+        </record>
+
+        <record model="lb.type_lieu" id="l5">
+            <field name="type_lieu">Mosquée</field>
+            <!-- no description for this one -->
+        </record>
+        <record model="lb.type_lieu" id="l6">
+            <field name="type_lieu">Espace de loisirs</field>
+        </record>
+        
+        
+        
+        <record model="lb.ville" id="v1">
+            <field name="nom">Dakar</field>
+        </record>
+        
+        
+        
+        <record model="lb.quartier" id="q1">
+            <field name="nom_quartier">Fann Hock</field>
+                     
+        </record>
+        
+        <record model="lb.quartier" id="q2">
+            <field name="nom_quartier">liberté 6</field>
+        </record>
+        
+        
+        <record model="lb.quartier" id="q3">
+            <field name="nom_quartier">Mermoz</field>
+        </record>
+        
+        <record model="lb.quartier" id="q4">
+            <field name="nom_quartier">Sacré Coeur</field>
+        </record>
+        
+        <record model="lb.quartier" id="q5">
+            <field name="nom_quartier">Amitié</field>
+        </record>
+        
+        <record model="lb.quartier" id="q6">
+            <field name="nom_quartier">Mamelles</field>
+        </record>
+        
+        <record model="lb.quartier" id="q7">
+            <field name="nom_quartier">Almadies</field>
+        </record>
+        
+        
+        <record model="lb.quartier" id="q8">
+            <field name="nom_quartier">Ngor</field>
+        </record>
+        
+        
+        <record model="lb.quartier" id="q9">
+            <field name="nom_quartier">Yoff</field>
+        </record>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     </data>
 </odoo>

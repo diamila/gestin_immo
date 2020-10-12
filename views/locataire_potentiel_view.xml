@@ -11,12 +11,16 @@
       <field name="arch" type="xml">
           
           
+             
+          
+          
            <xpath expr="//page[@name='sales_purchases']//field[@name='property_supplier_payment_term_id']" position="before">
-             <field name="statut_agent" string="statut Agent"  attrs="{'invisible': [('agent', '=', False)]}"/>
+             <field name="statut_agent" string="Statut agent"  attrs="{'invisible': [('agent', '=', False)]}"/>
             </xpath>
-
-
-
+        
+                       
+     
+          
 
 
           <button name="%(crm.crm_lead_opportunities)d" position="before">
@@ -30,9 +34,22 @@
           
            <button name="open_locataire_contrat" position="after">
                 <button name="open_facture" class="oe_stat_button" type="object" icon="fa-paste" attrs="{'invisible':['|', ('client_type','!=','client_loc'), ('active_potenctiel','!=','client')]}">
-                            <field string="pré-facturation" name="facture_count" widget="statinfo" />
+                            <field string="Pré-facturation" name="facture_count" widget="statinfo" />
                 </button>  
-             </button>              
+             </button>      
+             
+             <!--
+              <button name="action_view_partner_invoices" position="attributes">
+                <attribute name="attrs">{'invisible':['|', ('active_potenctiel','=','prospect') , ('customer','=',False)]}</attribute>
+               </button>
+               -->
+               
+              <!--  <button name="3325" position="attributes">
+                <attribute name="attrs">{'invisible':['|', ('active_potenctiel','=','prospect') , ('customer','=',False)]}</attribute>
+               </button>-->
+               
+               
+               
           
           
           
@@ -85,9 +102,7 @@
                <attribute name="attrs">{'invisible':[('active_potenctiel','=','client')]}</attribute>
           </xpath>
 
-           <xpath expr="//field[@name='user_id']" position="attributes">
-               <attribute name="attrs">{'invisible':[('origine_prospect','!=','agent_cpi')]}</attribute>
-          </xpath>
+           
 
           <xpath expr="//field[@name='user_id']" position="after">
               <br/>
@@ -105,7 +120,21 @@
 
           <xpath expr="//field[@name='type_besoin']" position="attributes">
                <attribute name="attrs">{'invisible':[('active_potenctiel','=','client')]}</attribute>
+               <attribute name="placeholder" >EX:Besoin d'un appartment à Fann</attribute>
           </xpath>
+          
+         
+          
+          
+          <xpath expr="//field[@name='type_besoin']" position="after">
+              <field name="budget"></field>
+          </xpath>
+          
+          
+           <xpath expr="//field[@name='budget']" position="attributes">
+               <attribute name="attrs" >{'invisible':[('active_potenctiel','=','client')]}</attribute>
+          </xpath>
+           
 
 
           <xpath expr="//field[@name='opportunity_count']" position="attributes">
@@ -132,16 +161,23 @@
 
            <button name="%(crm.crm_lead_opportunities)d" position="attributes">
                <attribute name="attrs" >{'invisible':[('active_potenctiel','=','client')]}</attribute>
+                 <xpath expr="//field[@name='planned_revenue']" position="attributes">
+           
+             <attribute name="context" >{'default_planned_revenue': context.get('planned_revenue', False),
+             'default_type_besoin': context.get('type_besoin', False),
+               'default_partner_id': active_id}</attribute>
+          </xpath>
            </button>
 
 
 
             <notebook position="inside">
-             <page string="Info locataire Potenciel" attrs="{'invisible':[('active_potenctiel','=','client')]}">
+             <page string="Information du prospects" attrs="{'invisible':['|', ('active_potenctiel','=','client'), ('customer','=',False)]}">
              <group>
                   <group>
                  <field name="quartier_souhaitee"></field>
-                 <field name="budget"></field>
+                
+                 <field name="planned_revenue"/>
                   <field name="nbre_tour"/>
                       <field name="ameublement"/>
                        <field name="chambres"></field>
@@ -157,7 +193,7 @@
             </notebook>
 
            <notebook position="inside">
-             <page string="Reclamation Client" attrs="{'invisible':['|', ('active_potenctiel','!=','client'), ('customer','=',False)]}">
+             <page string="Reclamation client" attrs="{'invisible':['|', ('active_potenctiel','!=','client'), ('customer','=',False)]}">
              <field name="reclamation" attrs="{'invisible':[('active_potenctiel','!=','client')]}">
                                     <tree string="Réclamation locataire">
                                         <field name="type_reclamation"/>
@@ -179,6 +215,40 @@
         </xpath>-->
       </field>
     </record>
+    
+    
+      <record id="locataire_agent_form_inherit" model="ir.ui.view">
+      <field name="name">locataire.agent.form.inherited</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="sale_commission.view_partner_form_agent"/>
+      <field name="arch" type="xml">
+          
+           
+            
+             <xpath expr="//page[@name='sales_purchases']//field[@name='agents']" position="replace"> 
+                    <field name="agents"
+                       attrs="{'invisible': ['|',('customer', '=', False), ('client_type','!=', 'client_ache')]}"
+                       widget="many2many_tags"
+                       context="{'default_agent': True}"
+                       string="Bailleur/courtier"></field>
+          </xpath>
+
+
+            <xpath expr="//page[@name='sales_purchases']//field[@name='message_bounce']" position="before">
+                <field name="agents"
+                       attrs="{'invisible': ['|', ('customer', '=', False), ('client_type','=', 'client_ache')]}"
+                       widget="many2many_tags"
+                       context="{'default_agent': True, 'default_statut_agent': 'courtier'}"
+                       string="Bailleur"
+                     ></field>
+            </xpath>
+                       
+                       
+            
+    </field>
+    </record>
+            
+        
 
         <!-- Locataires tree view -->
 
@@ -309,12 +379,12 @@
 
 
 
-        <menuitem id="locataire_potencie_menu" name="Prospect"
+        <menuitem id="locataire_potencie_menu" name="Prospects"
                   parent="rental_app_menu_client_n"
                   action="locataire_potenciel_list_action" sequence="1"/>
 
 
-       <menuitem id="client_locataire-ach_menu" name="locataires"
+       <menuitem id="client_locataire-ach_menu" name="Locataires"
                   parent="rental_app_menu_client_n"
                   action="client_loc_acheteur_action" sequence="2"/>
 

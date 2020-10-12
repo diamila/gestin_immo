@@ -15,11 +15,19 @@ class Locataire_potenciel(models.Model):
     quartier_souhaitee = fields.Many2one('lb.quartier', string="Quartier souhaité")
     budget = fields.Float(string="Budget", default=0.0, digits=dp.get_precision('Budget'))
     #type_id = fields.Many2one('lb.type', string="Type Biens souhaitee")
+    
+    planned_revenue = fields.Float(string="Budget", default=0.0, compute='_onchangebudget')
+    
+    @api.onchange('budget')
+    def _onchangebudget(self):
+        for r in self:
+            r.planned_revenue = r.budget
+                    
 
 
     active_potenctiel = fields.Selection(
         [('client', 'Est Un Client'), ('prospect', 'Est Un Prospect')],
-        string="statut", required=True, default='client')
+        string="Statut", required=True, default='client')
 
 
 
@@ -29,15 +37,17 @@ class Locataire_potenciel(models.Model):
     origine_prospect = fields.Selection(
         [('pub_journal', 'Pub journal'), ('site_web', 'Site web CPI'), ('linkedIn', 'LinkedIn'),
          ('facebook', 'Facebook'), ('agent_cpi', 'Agent CPI'), ('recommande', 'Recommandé')],
-        string="ORIGINE DU PROSPECT")
+        string="Origine du prospect")
+        
+        
 
-    user_id = fields.Many2one('res.users', string='Agent-Guide', track_visibility='onchange',
+    user_id = fields.Many2one('res.users', string='Agent Guide', track_visibility='onchange',
                               default=lambda self: self.env.user)
 
     # user_id = fields.Many2one('res.users', string='Agent-cpi')
 
-    nbre_tour = fields.Integer(string="niveau souhaité", default=0)
-    ameublement = fields.Char(string="ameublement souhaité")
+    nbre_tour = fields.Integer(string="Niveau souhaité", default=0)
+    ameublement = fields.Char(string="Ameublement souhaité")
     chambres = fields.Float(string="Nombre Chambres souhaité", default=0)
     salons = fields.Float(string="Nbre Salons souhaité", default=0)
     cuisines = fields.Float(string="Nbre Cuisines souhaité", default=0)
@@ -89,14 +99,14 @@ class Locataire_potenciel(models.Model):
 
     besoin = fields.Selection(
         [('location', 'Location Bien'), ('ach', 'Achat Biens')],
-        string="Besoin Du Prospect")
+        string="Type de besoin")
 
-    type_besoin = fields.Char(string="type de besoin")
+    type_besoin = fields.Char(string="Besoin du prospect")
 
 
     client_type = fields.Selection(
         [('client_ache', 'Client Acheteur'), ('client_loc', 'Client Locataire')],
-        string="statut client")
+        string="Statut client")
 
 
 class reclamation(models.Model):
@@ -162,8 +172,18 @@ class Locataire_agent(models.Model):
 
         
     statut_agent = fields.Selection(
-        [('bailleur', 'Est Un Bailleur'), ('courtier', 'Est Un Courtier')],
-        string="statut", required=True, default='bailleur')
+        [('bailleur', 'Est un bailleur'), ('courtier', 'Est un courtier')],
+        string="Statut", required=True, default='bailleur')
         
+        
+    
+    
+        
+    agents = fields.Many2many(
+        comodel_name="res.partner", relation="partner_agent_rel",
+        column1="partner_id", column2="agent_id",
+        domain=[('agent', '=', True)], string="bailleur")    
+        
+    
+                    
 
- 

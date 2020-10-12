@@ -34,7 +34,19 @@ class Location(models.Model):
     date = fields.Date(string='Date', required=True,
                                 default=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
-    contrat_id = fields.Char(string="ref contrat", required=True)
+    
+    contrat_id = fields.Char(string="Ref contrat", compute='_contrat_locataire')
+    
+    
+    name_locataire = fields.Char(string="name locataire", related='locataires.name')
+    
+    name_bien = fields.Char(string="name bien", related='bien_loue.name')
+    
+    @api.onchange('name_locataire','name_bien')
+    def _contrat_locataire(self):
+        for r in self:
+            r.contrat_id = r.name_locataire + '/' + r.name_bien
+            
 
     _sql_constraints = [
         ('non_contrat_unique',
@@ -57,7 +69,7 @@ class Location(models.Model):
     
 
     # champs---Information BIen"
-    bien_loue = fields.Many2one('product.product', string="Bien Loué")
+    bien_loue = fields.Many2one('product.product', string="Bien à louer")
     
     
    
@@ -121,15 +133,15 @@ class Location(models.Model):
     civilite = fields.Selection([('m.', 'Monsieur'), ('mme', 'Madame'), ('mlle', 'Mademoiselle'), ('m. et mme', 'M. et Mme')],
                                 string="Civilité", related='bailleur.civilite')
 
-    nbre_tour = fields.Integer(string="niveau", related='bien_loue.nbre_tour')
+    nbre_tour = fields.Integer(string="Niveau", related='bien_loue.nbre_tour')
 
     type_bien = fields.Many2one(related='bien_loue.type_id', string="Type Bien")
 
-    categ_id = fields.Many2one(related='bien_loue.categ_id', string="Type Bien")
+    categ_id = fields.Many2one(related='bien_loue.categ_id', string="Catégorie bien")
 
-    adresse = fields.Many2one(related='bien_loue.adresse', string="adresse Bien")
+    adresse = fields.Many2one(related='bien_loue.adresse', string="Adresse Bien")
 
-    ville = fields.Many2one(related='bien_loue.ville', string="ville Bien")
+    ville = fields.Many2one(related='bien_loue.ville', string="Ville Bien")
     rue = fields.Char(related='bien_loue.rue',string="Rue")
 
     chambres = fields.Float(related='bien_loue.chambres')
@@ -147,14 +159,14 @@ class Location(models.Model):
     g_electroge = fields.Boolean(related='bien_loue.g_electroge')
 
 
-    prixlocation_id = fields.Float(string="Prix de la location (hors charges en fcfa)",
+    prixlocation_id = fields.Float(string="Prix de location (hors charges en fcfa)",
                                    related='bien_loue.list_price', default=0.0)
-    utilisation = fields.Selection([('utilisation1', 'D’HABITATION'),
+    utilisation = fields.Selection([('utilisation1', 'D’habitation'),
                                     ('utilisation3', 'Utilisation professionnelle')], string="Utilisation")
 
     # champs----locataire
     locataires = fields.Many2one('res.partner', ondelete='cascade', string="Locataire")
-    mobile = fields.Char(string="N° Tel Locataire", related='locataires.mobile')
+    mobile = fields.Char(string="N° Tel Locataire", related='locataires.phone')
     adresse_locataire = fields.Char(string="Adresse locataire",
                                     related='locataires.street')
 
@@ -163,13 +175,13 @@ class Location(models.Model):
                                    related='locataires.num_piece_identite')
 
     # champs----Montant Déposé
-    caution = fields.Float(string="montant déposé")
+    caution = fields.Float(string="Montant déposé", required=True)
     date_depot = fields.Date(string="Date depot caution")
 
     depot_retourne = fields.Boolean('depot_retourne')
-    maintenance = fields.Float(string="coût maintenance", default=0.0)
+    maintenance = fields.Float(string="Coût maintenance", default=0.0)
     date_returne = fields.Date(string="Date caution retouné")
-    caution_returne = fields.Float(string="Caution A Returner", default=0.0, compute='_cautionreturne')
+    caution_returne = fields.Float(string="Caution à retourner", default=0.0, compute='_cautionreturne')
 
    
     @api.onchange('caution')
@@ -180,8 +192,8 @@ class Location(models.Model):
 
     # champs---information Contrat
     # validations de la date de debut et d'expiration
-    date_debut = fields.Date(string="Date Début", required=True)
-    date_expiration =  fields.Date(string="End Date", store=True,
+    date_debut = fields.Date(string="Date début", required=True)
+    date_expiration =  fields.Date(string="Date d'expiration", store=True,
         compute='_get_end_date')
 
     
@@ -209,14 +221,14 @@ class Location(models.Model):
          ('10', '10'), ('11', '11'), ('12', '12'), ('13', '13'), ('14', '14'), ('15', '15'), ('16', '16'), ('17', '17'),
          ('18', '18'), ('19', '19'), ('20', '20'), ('21', '21'), ('22', '22'), ('23', '23'), ('24', '24'), ('25', '25'),
          ('26', '26'), ('27', '27'), ('28', '28'), ('29', '29'), ('30', '30'), ('31', '31')],
-        string="jour de quittancement", help="La date selon laquelle vos quittances seraient datées", required=True)
+        string="Jour de quittancement", help="La date selon laquelle vos quittances seraient datées", required=True)
     # duré payement
     paiement = fields.Selection([('mensuel', 'Mensuel'), ('bimestriel', 'Bimestriel'), ('trimestriel', 'Trimestriel'),
                                  ('semestriel', 'Semestriel'), ('annuel', 'Annuel'), ('forfaitaire', 'Forfaitaire')],
-                                string="Durée Paiements", required=True)
+                                string="Durée Paiement", required=True)
 
     #
-    loyer_sans_charges = fields.Float(string="Prix de la location en fcfa", related='bien_loue.list_price', default=0.0,
+    loyer_sans_charges = fields.Float(string="Prix de location en fcfa", related='bien_loue.list_price', default=0.0,
                                       digits=dp.get_precision('Loyer hors charges'))
     frais_retard = fields.Float(string='Frais de retard (%)', default=0.0,
                                 digits=dp.get_precision('Frais de retard (%)'))
@@ -307,7 +319,7 @@ class Location(models.Model):
 
     mobile = fields.Char(string="Mobile coutier", related='courtier.mobile')
 
-    active_commision = fields.Boolean('courtier_True')
+    active_commision = fields.Boolean('Courtier_true')
     commision_courtier = fields.Float(string="Commision Courtier", default=0.0, compute='_commissioncourtier')
 
     @api.onchange('caution','active_commision')
@@ -349,7 +361,7 @@ class Location(models.Model):
             'view_type': 'form',
             'res_model': 'lb.etat_des_lieux',
             'view_id': False,
-            'view_mode': 'tree,form',
+            'view_mode': 'kanban,tree,form',
             'type': 'ir.actions.act_window',
         }
 

@@ -18,7 +18,7 @@ class Etat_des_lieux(models.Model):
         [('entree', 'Etat des lieux d\'entrée'), ('pendant', 'Etat des lieux durant la location'), ('sortie', 'Etat des lieux de sortie')], string="Type", required=True)
     date_etat_des_lieux = fields.Date(string="Date etat lieu")
    
-    location = fields.Many2one('lb.location', ondelete='cascade', string="Contrat associée", required=True)
+    location = fields.Many2one('lb.location', ondelete='cascade', string="Contrat associé", required=True,  domain="[('state','=','confirm')]")
 
 
     locataires = fields.Many2one(related='location.locataires', string="Locataire")
